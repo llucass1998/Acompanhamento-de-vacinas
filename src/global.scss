@@ -1,37 +1,179 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
+ion-content {
+  --background: var(--app-bg);
+}
 
-/* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+ion-toolbar {
+  --background: var(--app-green);
+  --color: var(--app-brown);
+}
 
-/* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+ion-tab-bar {
+  --background: #ffffff;
+  --color: var(--app-brown);
+  --color-selected: var(--app-orange);
+  border-top: 1px solid rgba(71, 60, 51, 0.12);
+}
 
-/* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
+.page-container {
+  padding: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+.hero-card {
+  background: linear-gradient(135deg, #ABC270, #FEC868);
+  color: #473C33;
+  border-radius: 24px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 10px 25px rgba(71, 60, 51, 0.12);
+}
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+.hero-card h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.hero-card p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.hero-tag {
+  font-weight: 700;
+  margin-bottom: 8px !important;
+  color: #473C33;
+}
+
+.section-heading {
+  color: #473C33;
+  margin: 22px 0 12px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.info-card {
+  border-radius: 18px;
+  border: 1px solid rgba(71, 60, 51, 0.12);
+  box-shadow: 0 8px 20px rgba(71, 60, 51, 0.08);
+}
+
+.selected-card {
+  border: 2px solid #ABC270;
+}
+
+.form-card ion-item {
+  --background: transparent;
+}
+
+.main-button {
+  margin-top: 16px;
+  --background: #FDA769;
+  --background-hover: #FEC868;
+  --color: #473C33;
+  font-weight: 700;
+}
+
+.custom-list {
+  background: transparent;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.custom-list ion-item {
+  --background: #ffffff;
+  --color: #473C33;
+}
+
+.active-child {
+  border-left: 6px solid #FDA769;
+}
+
+.badge-status {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  margin: 8px 0;
+  color: #473C33;
+}
+
+.status-tomada {
+  background: #ABC270;
+}
+
+.status-pendente {
+  background: #FEC868;
+}
+
+.status-atrasada {
+  background: #FDA769;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.summary-card {
+  background: #ffffff;
+  color: #473C33;
+  padding: 16px;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(71, 60, 51, 0.08);
+}
+
+.summary-card span {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.summary-card strong {
+  font-size: 28px;
+}
+
+.summary-card.taken {
+  background: #ABC270;
+}
+
+.summary-card.pending {
+  background: #FEC868;
+}
+
+.summary-card.late {
+  background: #FDA769;
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding: 28px;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .hero-card h1 {
+    font-size: 36px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

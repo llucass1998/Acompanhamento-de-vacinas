@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Acompanhamento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-container">
+    <section class="hero-card">
+      <p class="hero-tag">Situação vacinal</p>
+      <h1>{{ crianca.nome }}</h1>
+      <p>
+        Veja quais vacinas foram realizadas, quais estão pendentes e quais precisam de atenção.
+      </p>
+    </section>
+
+    <section class="summary-grid" *ngIf="resumo">
+      <div class="summary-card">
+        <span>Total</span>
+        <strong>{{ resumo.total }}</strong>
+      </div>
+
+      <div class="summary-card taken">
+        <span>Tomadas</span>
+        <strong>{{ resumo.tomadas }}</strong>
+      </div>
+
+      <div class="summary-card pending">
+        <span>Pendentes</span>
+        <strong>{{ resumo.pendentes }}</strong>
+      </div>
+
+      <div class="summary-card late">
+        <span>Atrasadas</span>
+        <strong>{{ resumo.atrasadas }}</strong>
+      </div>
+    </section>
+
+    <h2 class="section-heading">Vacinas</h2>
+
+    <div class="card-grid">
+      <ion-card class="info-card" *ngFor="let vacina of vacinas">
+        <ion-card-header>
+          <ion-card-title>{{ vacina.nome }}</ion-card-title>
+          <ion-card-subtitle>{{ vacina.dose }}</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          <p>{{ vacina.descricao }}</p>
+
+          <p>
+            <strong>Data prevista:</strong>
+            {{ vacina.dataPrevista }}
+          </p>
+
+          <p *ngIf="vacina.dataAplicacao">
+            <strong>Aplicada em:</strong>
+            {{ vacina.dataAplicacao }}
+          </p>
+
+          <span class="badge-status" [ngClass]="getStatusClass(vacina.status)">
+            {{ vacina.status }}
+          </span>
+
+          <ion-button
+            expand="block"
+            class="main-button"
+            *ngIf="vacina.status !== 'TOMADA'"
+            (click)="marcarComoTomada(vacina.id)"
+          >
+            Marcar como tomada
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

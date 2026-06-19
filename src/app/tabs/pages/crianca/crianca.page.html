@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Crianças</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-container">
+    <section class="hero-card">
+      <p class="hero-tag">Acompanhamento familiar</p>
+      <h1>Escolha a criança</h1>
+      <p>
+        Acompanhe individualmente a situação vacinal de cada filho.
+      </p>
+    </section>
+
+    <ion-card class="info-card selected-card" *ngIf="criancaSelecionada">
+      <ion-card-header>
+        <ion-card-title>{{ criancaSelecionada.nome }}</ion-card-title>
+        <ion-card-subtitle>
+          {{ calcularIdade(criancaSelecionada.dataNascimento) }}
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Responsável:</strong> {{ criancaSelecionada.responsavel }}</p>
+        <p *ngIf="criancaSelecionada.observacao">
+          {{ criancaSelecionada.observacao }}
+        </p>
+      </ion-card-content>
+    </ion-card>
+
+    <h2 class="section-heading">Crianças cadastradas</h2>
+
+    <ion-list class="custom-list">
+      <ion-item
+        button
+        *ngFor="let crianca of criancas"
+        (click)="selecionarCrianca(crianca.id)"
+        [class.active-child]="criancaSelecionada && criancaSelecionada.id === crianca.id"
+      >
+        <ion-label>
+          <h2>{{ crianca.nome }}</h2>
+          <p>{{ calcularIdade(crianca.dataNascimento) }}</p>
+        </ion-label>
+
+        <ion-badge slot="end" *ngIf="criancaSelecionada && criancaSelecionada.id === crianca.id">
+          Selecionada
+        </ion-badge>
+      </ion-item>
+    </ion-list>
+
+    <ion-card class="info-card form-card">
+      <ion-card-header>
+        <ion-card-title>Adicionar criança</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Nome</ion-label>
+          <ion-input [(ngModel)]="novaCrianca.nome" placeholder="Ex: João Pedro"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Data de nascimento</ion-label>
+          <ion-input type="date" [(ngModel)]="novaCrianca.dataNascimento"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Responsável</ion-label>
+          <ion-input [(ngModel)]="novaCrianca.responsavel" placeholder="Nome do responsável"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Observação</ion-label>
+          <ion-input [(ngModel)]="novaCrianca.observacao" placeholder="Opcional"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" class="main-button" (click)="adicionarCrianca()">
+          Adicionar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

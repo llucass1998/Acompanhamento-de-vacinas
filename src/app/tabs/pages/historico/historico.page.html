@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Histórico</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-container">
+    <section class="hero-card">
+      <p class="hero-tag">Carteira digital</p>
+      <h1>Histórico de {{ crianca.nome }}</h1>
+      <p>
+        Consulte as vacinas já registradas como aplicadas.
+      </p>
+    </section>
+
+    <ion-list class="custom-list" *ngIf="historico.length > 0">
+      <ion-item *ngFor="let vacina of historico">
+        <ion-label>
+          <h2>{{ vacina.nome }} - {{ vacina.dose }}</h2>
+          <p>{{ vacina.descricao }}</p>
+          <p>Aplicada em: {{ vacina.dataAplicacao }}</p>
+        </ion-label>
+
+        <ion-badge slot="end" class="badge-status status-tomada">
+          TOMADA
+        </ion-badge>
+      </ion-item>
+    </ion-list>
+
+    <ion-card class="info-card" *ngIf="historico.length === 0">
+      <ion-card-content>
+        Nenhuma vacina aplicada foi registrada para esta criança.
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

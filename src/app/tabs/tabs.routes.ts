@@ -7,30 +7,43 @@ export const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'tab1',
+        path: 'crianca',
         loadComponent: () =>
-          import('../tab1/tab1.page').then((m) => m.Tab1Page),
+          import('./pages/crianca/crianca.page').then(
+            (m) => m.CriancaPage
+          ),
       },
       {
-        path: 'tab2',
+        path: 'acompanhamento',
         loadComponent: () =>
-          import('../tab2/tab2.page').then((m) => m.Tab2Page),
+          import('./pages/acompanhamento/acompanhamento.page').then(
+            (m) => m.AcompanhamentoPage
+          ),
       },
       {
-        path: 'tab3',
+        path: 'historico',
         loadComponent: () =>
-          import('../tab3/tab3.page').then((m) => m.Tab3Page),
+          import('./pages/historico/historico.page').then(
+            (m) => m.HistoricoPage
+          ),
+      },
+      {
+        path: 'campanhas',
+        loadComponent: () =>
+          import('./pages/campanhas/campanhas.page').then(
+            (m) => m.CampanhasPage
+          ),
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/crianca',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/tabs/crianca',
     pathMatch: 'full',
   },
 ];

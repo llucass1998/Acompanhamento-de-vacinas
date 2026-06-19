@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Campanhas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-container">
+    <section class="hero-card">
+      <p class="hero-tag">Saúde infantil</p>
+      <h1>Campanhas de vacinação</h1>
+      <p>
+        Visualize campanhas ativas e informações importantes para o público infantil.
+      </p>
+    </section>
+
+    <div class="card-grid">
+      <ion-card class="info-card" *ngFor="let campanha of campanhas">
+        <ion-card-header>
+          <ion-card-title>{{ campanha.titulo }}</ion-card-title>
+          <ion-card-subtitle>{{ campanha.periodo }}</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          <p>{{ campanha.descricao }}</p>
+
+          <p>
+            <strong>Público:</strong>
+            {{ campanha.publico }}
+          </p>
+
+          <span
+            class="badge-status"
+            [class.status-tomada]="campanha.ativa"
+            [class.status-pendente]="!campanha.ativa"
+          >
+            {{ campanha.ativa ? 'ATIVA' : 'EM BREVE' }}
+          </span>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>
