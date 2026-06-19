@@ -1,7 +1,18 @@
 ﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonTitle,
+  IonToolbar
+} from '@ionic/angular/standalone';
 import { Crianca } from '../../../models/crianca.model';
 import { ResumoVacinal } from '../../../models/vacina.model';
 import { VacinaService } from '../../../services/vacina.service';
@@ -11,7 +22,20 @@ import { VacinaService } from '../../../services/vacina.service';
   templateUrl: './crianca.page.html',
   styleUrls: ['./crianca.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonButton,
+    IonCard,
+    IonCardContent,
+    IonContent,
+    IonHeader,
+    IonInput,
+    IonItem,
+    IonLabel,
+    IonTitle,
+    IonToolbar
+  ],
 })
 export class CriancaPage implements OnInit {
   criancas: Crianca[] = [];

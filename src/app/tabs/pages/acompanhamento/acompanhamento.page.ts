@@ -1,6 +1,12 @@
 ﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar
+} from '@ionic/angular/standalone';
 
 import { Crianca } from '../../../models/crianca.model';
 import { ResumoVacinal, StatusVacina, VacinaComStatus } from '../../../models/vacina.model';
@@ -11,7 +17,7 @@ import { VacinaService } from '../../../services/vacina.service';
   templateUrl: './acompanhamento.page.html',
   styleUrls: ['./acompanhamento.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule],
+  imports: [CommonModule, IonButton, IonContent, IonHeader, IonTitle, IonToolbar],
 })
 export class AcompanhamentoPage implements OnInit {
   crianca!: Crianca;

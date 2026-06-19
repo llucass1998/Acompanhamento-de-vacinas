@@ -1,6 +1,11 @@
 ﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar
+} from '@ionic/angular/standalone';
 import { Campanha } from '../../../models/vacina.model';
 import { VacinaService } from '../../../services/vacina.service';
 
@@ -9,7 +14,7 @@ import { VacinaService } from '../../../services/vacina.service';
   templateUrl: './campanhas.page.html',
   styleUrls: ['./campanhas.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule],
+  imports: [CommonModule, IonContent, IonHeader, IonTitle, IonToolbar],
 })
 export class CampanhasPage implements OnInit {
   campanhas: Campanha[] = [];

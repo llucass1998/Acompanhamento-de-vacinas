@@ -1,6 +1,11 @@
 ﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar
+} from '@ionic/angular/standalone';
 import { Crianca } from '../../../models/crianca.model';
 import { VacinaComStatus } from '../../../models/vacina.model';
 import { VacinaService } from '../../../services/vacina.service';
@@ -10,7 +15,7 @@ import { VacinaService } from '../../../services/vacina.service';
   templateUrl: './historico.page.html',
   styleUrls: ['./historico.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule],
+  imports: [CommonModule, IonContent, IonHeader, IonTitle, IonToolbar],
 })
 export class HistoricoPage implements OnInit {
   crianca!: Crianca;
