@@ -1,0 +1,99 @@
+﻿<ion-header>
+  <ion-toolbar>
+    <ion-title>Acompanhamento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-container">
+    <section class="hero-card">
+      <div>
+        <p class="hero-tag">Situação vacinal</p>
+        <h1>{{ crianca.nome }}</h1>
+        <p>
+          Acompanhe doses aplicadas, pendências futuras e vacinas com data ultrapassada para agir no momento certo.
+        </p>
+      </div>
+
+      <div class="progress-card" *ngIf="resumo">
+        <span class="muted">Cobertura registrada</span>
+        <strong>{{ percentualTomadas }}%</strong>
+        <div class="progress-track" aria-hidden="true">
+          <span [style.width.%]="percentualTomadas"></span>
+        </div>
+        <p class="muted">{{ resumo.tomadas }} de {{ resumo.total }} vacina(s) tomadas.</p>
+      </div>
+    </section>
+
+    <section class="summary-grid" *ngIf="resumo">
+      <div class="summary-card">
+        <span>Total</span>
+        <strong>{{ resumo.total }}</strong>
+      </div>
+
+      <div class="summary-card taken">
+        <span>Tomadas</span>
+        <strong>{{ resumo.tomadas }}</strong>
+      </div>
+
+      <div class="summary-card pending">
+        <span>Pendentes</span>
+        <strong>{{ resumo.pendentes }}</strong>
+      </div>
+
+      <div class="summary-card late">
+        <span>Atrasadas</span>
+        <strong>{{ resumo.atrasadas }}</strong>
+      </div>
+    </section>
+
+    <div class="section-row">
+      <div>
+        <h2 class="section-heading">Vacinas da criança</h2>
+        <p class="section-caption">Status calculado a partir da data prevista e do registro de aplicação.</p>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <article class="vaccine-card" *ngFor="let vacina of vacinas" [ngClass]="getStatusClass(vacina.status)">
+        <div class="card-title-row">
+          <div>
+            <h3>{{ vacina.nome }}</h3>
+            <p class="muted">{{ vacina.dose }}</p>
+          </div>
+
+          <span class="badge-status" [ngClass]="getStatusClass(vacina.status)">
+            {{ getStatusLabel(vacina.status) }}
+          </span>
+        </div>
+
+        <p>{{ vacina.descricao }}</p>
+
+        <div class="vaccine-meta">
+          <div class="meta-item">
+            <span>Data prevista</span>
+            <strong>{{ vacina.dataPrevista | date:'dd/MM/yyyy' }}</strong>
+          </div>
+
+          <div class="meta-item" *ngIf="vacina.dataAplicacao">
+            <span>Aplicada em</span>
+            <strong>{{ vacina.dataAplicacao | date:'dd/MM/yyyy' }}</strong>
+          </div>
+        </div>
+
+        <p class="attention-note" *ngIf="vacina.status === 'ATRASADA'">
+          {{ getStatusDescription(vacina.status) }}
+        </p>
+
+        <ion-button
+          expand="block"
+          class="main-button"
+          *ngIf="vacina.status !== 'TOMADA'"
+          (click)="marcarComoTomada(vacina.id)"
+        >
+          Registrar como tomada
+        </ion-button>
+      </article>
+    </div>
+  </div>
+</ion-content>
