@@ -1,5 +1,5 @@
 ﻿import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -18,10 +18,10 @@ import { VacinaService } from '../../../services/vacina.service';
   imports: [CommonModule, IonContent, IonHeader, IonTitle, IonToolbar],
 })
 export class HistoricoPage implements OnInit {
+  private vacinaService = inject(VacinaService);
+
   crianca!: Crianca;
   historico: VacinaComStatus[] = [];
-
-  constructor(private vacinaService: VacinaService) {}
 
   ngOnInit() {
     this.carregarDados();

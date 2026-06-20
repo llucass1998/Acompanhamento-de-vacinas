@@ -1,5 +1,5 @@
-﻿import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   IonButton,
   IonContent,
@@ -20,12 +20,13 @@ import { VacinaService } from '../../../services/vacina.service';
   imports: [CommonModule, IonButton, IonContent, IonHeader, IonTitle, IonToolbar],
 })
 export class AcompanhamentoPage implements OnInit {
+  private vacinaService = inject(VacinaService);
+
   crianca!: Crianca;
   vacinas: VacinaComStatus[] = [];
   resumo!: ResumoVacinal;
   percentualTomadas = 0;
-
-  constructor(private vacinaService: VacinaService) {}
+  filtroStatus: StatusVacina | 'TODAS' = 'TODAS';
 
   ngOnInit() {
     this.carregarDados();
@@ -49,6 +50,14 @@ export class AcompanhamentoPage implements OnInit {
     this.carregarDados();
   }
 
+  get vacinasFiltradas(): VacinaComStatus[] {
+    if (this.filtroStatus === 'TODAS') {
+      return this.vacinas;
+    }
+
+    return this.vacinas.filter(vacina => vacina.status === this.filtroStatus);
+  }
+
   getStatusClass(status: StatusVacina): string {
     return `status-${status.toLowerCase()}`;
   }
@@ -63,14 +72,31 @@ export class AcompanhamentoPage implements OnInit {
     return labels[status];
   }
 
+  getDiasTexto(vacina: VacinaComStatus): string {
+    const dias = this.vacinaService.getDiasParaVacina(vacina);
+
+    if (vacina.status === 'TOMADA') {
+      return 'Dose ja registrada.';
+    }
+
+    if (dias < 0) {
+      return `${Math.abs(dias)} dia(s) de atraso.`;
+    }
+
+    if (dias === 0) {
+      return 'Prevista para hoje.';
+    }
+
+    return `Faltam ${dias} dia(s).`;
+  }
+
   getStatusDescription(status: StatusVacina): string {
     const descriptions: Record<StatusVacina, string> = {
-      TOMADA: 'Dose já registrada no histórico vacinal.',
+      TOMADA: 'Dose ja registrada no historico vacinal.',
       PENDENTE: 'Dose prevista para uma data futura.',
-      ATRASADA: 'Data prevista ultrapassada. Atenção necessária.'
+      ATRASADA: 'Data prevista ultrapassada. Atencao necessaria.'
     };
 
     return descriptions[status];
   }
 }
-

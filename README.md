@@ -1,30 +1,37 @@
-﻿# Vacina Kids
+# Vacina Kids
 
-Aplicação Ionic com Angular para acompanhamento da jornada de vacinação infantil. O projeto simula uma carteira digital simples para famílias com mais de uma criança.
+Aplicacao Ionic + Angular para acompanhamento da vacinacao infantil. O projeto permite que uma familia acompanhe criancas diferentes, visualize vacinas previstas, identifique pendencias e consulte o historico vacinal.
 
-## Funcionalidades
+Deploy: https://acompanhamento-de-vacinas.vercel.app/tabs/acompanhamento
 
-- Cadastro e seleção de crianças.
-- Acompanhamento individual da situação vacinal.
-- Indicadores de vacinas tomadas, pendentes e atrasadas.
+## Funcionalidades principais
+
+- Cadastro e selecao de criancas.
+- Visualizacao individual da situacao vacinal de cada crianca.
+- Listagem de vacinas com nome, dose, descricao, data prevista e status.
+- Identificacao de vacinas tomadas, pendentes e atrasadas.
 - Registro de vacina como tomada.
-- Histórico vacinal por criança.
-- Listagem de campanhas de vacinação ativas e futuras.
-- Interface responsiva para desktop, tablet e mobile.
+- Consulta do historico vacinal por crianca.
+- Exibicao de campanhas de vacinacao.
+- Persistencia local dos dados no navegador.
 
-## Paleta Obrigatória
+## Cenarios atendidos
 
-- Verde: `#ABC270`
-- Amarelo: `#FEC868`
-- Laranja: `#FDA769`
-- Marrom: `#473C33`
+### Cenario 1
 
-## Cenários Atendidos
+Uma crianca possui vacinas previstas para sua faixa etaria. O responsavel consegue identificar facilmente quais vacinas ja foram realizadas e quais ainda precisam de atencao.
 
-1. O responsável identifica vacinas tomadas e vacinas que precisam de atenção.
-2. Vacinas com data prevista ultrapassada aparecem como atrasadas.
-3. Campanhas ativas ficam destacadas na tela de campanhas.
-4. Cada criança possui resumo e histórico próprios, evitando confusão entre filhos.
+### Cenario 2
+
+Uma vacina com data prevista ultrapassada e ainda nao aplicada aparece com status de atrasada e destaque visual.
+
+### Cenario 3
+
+Campanhas de vacinacao ativas sao exibidas na tela de campanhas, com publico e periodo informados.
+
+### Cenario 4
+
+Uma familia com mais de um filho consegue selecionar cada crianca e visualizar historico, vacinas e resumo de forma individual.
 
 ## Tecnologias
 
@@ -32,34 +39,36 @@ Aplicação Ionic com Angular para acompanhamento da jornada de vacinação infa
 - Angular
 - TypeScript
 - Capacitor
+- Jasmine/Karma
+- Vercel
 
-## Como Rodar Localmente
+## Como rodar localmente
 
 ```bash
 npm install
 npm start
 ```
 
-A aplicação ficará disponível em `http://127.0.0.1:4200/` ou `http://localhost:4200/`.
+A aplicacao ficara disponivel em `http://localhost:4200/`.
 
-## Build
+## Validacao
+
+```bash
+npm test -- --watch=false --browsers=ChromeHeadless
+npm run lint
+npm run build
+```
+
+## Deploy
 
 ```bash
 npm run build
 ```
 
-A saída de produção é gerada em `www/`.
+A saida de producao e gerada na pasta `www/`.
 
-## Publicação na Vercel
+O arquivo `vercel.json` ja esta configurado para publicar a aplicacao como SPA na Vercel.
 
-O projeto já possui `vercel.json` configurado para:
+## Observacao
 
-- comando de build: `npm run build`
-- diretório de saída: `www`
-- fallback de rotas para SPA
-
-Na Vercel, importe o repositório GitHub e confirme essas configurações caso a plataforma não detecte automaticamente.
-
-## Observação
-
-Os dados são mockados em memória para fins de demonstração do desafio. Firestore/Firebase podem ser adicionados como evolução futura.
+Este projeto tem finalidade educacional. As informacoes de vacinas servem como simulacao para acompanhamento e devem ser sempre confirmadas com a caderneta oficial e uma unidade de saude.

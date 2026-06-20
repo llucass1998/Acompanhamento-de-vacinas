@@ -9,6 +9,9 @@ export interface Vacina {
   dataPrevista: string;
   dataAplicacao?: string;
   aplicada: boolean;
+  localAplicacao?: string;
+  observacao?: string;
+  origem?: 'CALENDARIO_NACIONAL' | 'MANUAL';
 }
 
 export interface VacinaComStatus extends Vacina {

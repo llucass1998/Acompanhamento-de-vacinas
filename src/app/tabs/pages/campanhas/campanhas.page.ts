@@ -1,5 +1,5 @@
 ﻿import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -17,9 +17,9 @@ import { VacinaService } from '../../../services/vacina.service';
   imports: [CommonModule, IonContent, IonHeader, IonTitle, IonToolbar],
 })
 export class CampanhasPage implements OnInit {
-  campanhas: Campanha[] = [];
+  private vacinaService = inject(VacinaService);
 
-  constructor(private vacinaService: VacinaService) {}
+  campanhas: Campanha[] = [];
 
   ngOnInit() {
     this.carregarDados();

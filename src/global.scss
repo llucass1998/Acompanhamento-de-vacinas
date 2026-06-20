@@ -185,7 +185,12 @@ ion-tab-button {
 .child-card,
 .empty-state,
 .timeline-item,
-.selected-panel {
+.selected-panel,
+.account-panel,
+.warning-card,
+.reminder-card,
+.detail-panel,
+.standalone-form {
   border: 1px solid rgba(71, 60, 51, 0.12);
   border-radius: 8px;
   background: #ffffff;
@@ -206,6 +211,48 @@ ion-tab-button {
   gap: 16px;
   padding: 18px;
   border-color: rgba(171, 194, 112, 0.75);
+}
+
+.account-panel,
+.reminder-card,
+.warning-card,
+.detail-panel,
+.standalone-form {
+  display: grid;
+  gap: 16px;
+  margin: 16px 0;
+  padding: 18px;
+}
+
+.account-panel {
+  border-color: rgba(254, 200, 104, 0.72);
+  background: linear-gradient(135deg, #ffffff, #fff8ed);
+}
+
+.warning-card {
+  border-color: rgba(253, 167, 105, 0.8);
+  background: rgba(253, 167, 105, 0.16);
+}
+
+.warning-card h2,
+.reminder-card h2,
+.detail-panel h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.warning-card p,
+.reminder-card p,
+.detail-panel p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.reminder-card {
+  align-items: center;
+  border-color: rgba(171, 194, 112, 0.8);
+  background: rgba(171, 194, 112, 0.16);
 }
 
 .child-profile {
@@ -244,6 +291,18 @@ ion-tab-button {
   border-color: rgba(71, 60, 51, 0.12);
   cursor: pointer;
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.vaccine-card {
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.vaccine-card:hover,
+.vaccine-card:focus-within {
+  border-color: var(--app-orange);
+  box-shadow: 0 14px 28px rgba(71, 60, 51, 0.12);
+  transform: translateY(-2px);
 }
 
 .child-card:hover,
@@ -298,6 +357,13 @@ ion-tab-button {
   margin-bottom: 6px;
 }
 
+.account-form ion-item,
+.standalone-form ion-item {
+  --background: transparent;
+  --border-color: rgba(71, 60, 51, 0.12);
+  --color: var(--app-brown);
+}
+
 .main-button {
   margin-top: 16px;
   --background: var(--app-orange);
@@ -306,6 +372,62 @@ ion-tab-button {
   --box-shadow: none;
   --color: var(--app-brown);
   font-weight: 900;
+}
+
+.compact-button {
+  margin-top: 0;
+}
+
+.link-button {
+  margin-top: 0;
+  --color: var(--app-brown);
+  font-weight: 900;
+}
+
+.danger-link {
+  --color: #b42318;
+}
+
+.action-row,
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-row {
+  margin: 0 0 16px;
+}
+
+.filter-row button {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgba(71, 60, 51, 0.14);
+  border-radius: 999px;
+  background: #ffffff;
+  color: rgba(71, 60, 51, 0.82);
+  font-weight: 900;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.filter-row button:hover,
+.filter-row button.active-filter {
+  border-color: var(--app-orange);
+  background: var(--app-yellow);
+  color: var(--app-brown);
+  transform: translateY(-1px);
+}
+
+.inline-message {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(171, 194, 112, 0.45);
+  border-radius: 8px;
+  background: rgba(171, 194, 112, 0.16);
+  color: var(--app-brown);
+  font-weight: 800;
 }
 
 .badge-status {
@@ -427,6 +549,45 @@ ion-tab-button {
   font-weight: 800;
 }
 
+.detail-panel {
+  border-color: rgba(71, 60, 51, 0.22);
+}
+
+.round-action {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid rgba(71, 60, 51, 0.14);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--app-brown);
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.form-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.checkbox-row {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  gap: 8px;
+  margin: 12px 0;
+  color: var(--app-brown);
+  font-weight: 900;
+}
+
+.checkbox-row input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--app-orange);
+}
+
 .custom-list {
   overflow: hidden;
   border: 1px solid rgba(71, 60, 51, 0.12);
@@ -496,6 +657,16 @@ ion-tab-button {
     align-items: center;
   }
 
+  .account-panel,
+  .reminder-card {
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+  }
+
+  .reminder-card {
+    grid-template-columns: 1fr auto;
+  }
+
   .dashboard-grid,
   .child-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -503,6 +674,10 @@ ion-tab-button {
 
   .summary-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

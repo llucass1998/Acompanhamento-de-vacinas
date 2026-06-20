@@ -40,6 +40,16 @@
               <span>Aplicada em</span>
               <strong>{{ vacina.dataAplicacao | date:'dd/MM/yyyy' }}</strong>
             </div>
+
+            <div class="meta-item" *ngIf="vacina.localAplicacao">
+              <span>Local</span>
+              <strong>{{ vacina.localAplicacao }}</strong>
+            </div>
+
+            <div class="meta-item" *ngIf="vacina.observacao">
+              <span>Observação</span>
+              <strong>{{ vacina.observacao }}</strong>
+            </div>
           </div>
         </div>
       </article>

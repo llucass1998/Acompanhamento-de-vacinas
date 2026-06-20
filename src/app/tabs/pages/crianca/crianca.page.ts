@@ -1,5 +1,5 @@
-﻿import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton,
@@ -38,9 +38,12 @@ import { VacinaService } from '../../../services/vacina.service';
   ],
 })
 export class CriancaPage implements OnInit {
+  private vacinaService = inject(VacinaService);
+
   criancas: Crianca[] = [];
   criancaSelecionada!: Crianca;
   resumosPorCrianca: Record<number, ResumoVacinal> = {};
+  mensagemCrianca = '';
 
   novaCrianca = {
     nome: '',
@@ -48,8 +51,6 @@ export class CriancaPage implements OnInit {
     responsavel: '',
     observacao: ''
   };
-
-  constructor(private vacinaService: VacinaService) {}
 
   ngOnInit() {
     this.carregarDados();
@@ -74,7 +75,10 @@ export class CriancaPage implements OnInit {
   }
 
   adicionarCrianca() {
+    this.mensagemCrianca = '';
+
     if (!this.novaCrianca.nome || !this.novaCrianca.dataNascimento || !this.novaCrianca.responsavel) {
+      this.mensagemCrianca = 'Preencha nome, nascimento e responsavel.';
       return;
     }
 
@@ -93,6 +97,7 @@ export class CriancaPage implements OnInit {
     };
 
     this.carregarDados();
+    this.mensagemCrianca = 'Crianca cadastrada com calendario inicial.';
   }
 
   calcularIdade(dataNascimento: string): string {
@@ -136,4 +141,3 @@ export class CriancaPage implements OnInit {
     return 'status-tomada';
   }
 }
-

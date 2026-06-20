@@ -1,4 +1,4 @@
-﻿<ion-header>
+<ion-header>
   <ion-toolbar>
     <ion-title>Vacina Kids</ion-title>
   </ion-toolbar>
@@ -9,15 +9,15 @@
     <section class="hero-card">
       <div>
         <p class="hero-tag">Acompanhamento familiar</p>
-        <h1>Jornada vacinal infantil em um só lugar.</h1>
+        <h1>Jornada vacinal infantil em um so lugar.</h1>
         <p>
-          Selecione cada criança para visualizar histórico, próximas doses, pendências e campanhas importantes sem depender apenas da carteira física.
+          Selecione cada crianca para visualizar historico, vacinas previstas, pendencias e campanhas importantes.
         </p>
       </div>
 
       <div class="hero-kpis">
         <div class="kpi-card">
-          <span>Crianças</span>
+          <span>Criancas</span>
           <strong>{{ criancas.length }}</strong>
         </div>
         <div class="kpi-card">
@@ -34,7 +34,7 @@
           <p class="hero-tag">Perfil ativo</p>
           <h2>{{ criancaSelecionada.nome }}</h2>
           <p class="muted">
-            {{ calcularIdade(criancaSelecionada.dataNascimento) }} · Responsável: {{ criancaSelecionada.responsavel }}
+            {{ calcularIdade(criancaSelecionada.dataNascimento) }} · Responsavel: {{ criancaSelecionada.responsavel }}
           </p>
           <p class="muted" *ngIf="criancaSelecionada.observacao">
             {{ criancaSelecionada.observacao }}
@@ -60,19 +60,16 @@
 
     <div class="section-row">
       <div>
-        <h2 class="section-heading">Crianças cadastradas</h2>
-        <p class="section-caption">Cada perfil mantém uma situação vacinal própria.</p>
+        <h2 class="section-heading">Criancas cadastradas</h2>
+        <p class="section-caption">Cada perfil mantem uma situacao vacinal propria.</p>
       </div>
     </div>
 
     <div class="child-grid">
-      <button
-        type="button"
+      <article
         class="child-card"
         *ngFor="let crianca of criancas"
-        (click)="selecionarCrianca(crianca.id)"
         [class.active-child]="criancaSelecionada && criancaSelecionada.id === crianca.id"
-        [attr.aria-label]="'Selecionar ' + crianca.nome"
       >
         <div class="child-top">
           <div class="child-profile">
@@ -93,21 +90,27 @@
           <span><strong>{{ getResumo(crianca.id).pendentes }}</strong> pendentes</span>
           <span><strong>{{ getResumo(crianca.id).atrasadas }}</strong> atrasadas</span>
         </div>
-      </button>
+
+        <ion-button size="small" class="main-button compact-button" (click)="selecionarCrianca(crianca.id)">
+          Acompanhar crianca
+        </ion-button>
+      </article>
     </div>
 
     <div class="section-row">
       <div>
-        <h2 class="section-heading">Adicionar criança</h2>
+        <h2 class="section-heading">Adicionar crianca</h2>
         <p class="section-caption">Cadastre outro filho para acompanhar separadamente.</p>
       </div>
     </div>
 
     <ion-card class="info-card form-card">
       <ion-card-content>
+        <p class="inline-message" *ngIf="mensagemCrianca">{{ mensagemCrianca }}</p>
+
         <ion-item>
           <ion-label position="stacked">Nome</ion-label>
-          <ion-input [(ngModel)]="novaCrianca.nome" placeholder="Ex: João Pedro"></ion-input>
+          <ion-input [(ngModel)]="novaCrianca.nome" placeholder="Ex: Joao Pedro"></ion-input>
         </ion-item>
 
         <ion-item>
@@ -116,12 +119,12 @@
         </ion-item>
 
         <ion-item>
-          <ion-label position="stacked">Responsável</ion-label>
-          <ion-input [(ngModel)]="novaCrianca.responsavel" placeholder="Nome do responsável"></ion-input>
+          <ion-label position="stacked">Responsavel</ion-label>
+          <ion-input [(ngModel)]="novaCrianca.responsavel" placeholder="Nome do responsavel"></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label position="stacked">Observação</ion-label>
+          <ion-label position="stacked">Observacao</ion-label>
           <ion-input [(ngModel)]="novaCrianca.observacao" placeholder="Opcional"></ion-input>
         </ion-item>
 
@@ -132,4 +135,3 @@
     </ion-card>
   </div>
 </ion-content>
-
