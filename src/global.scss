@@ -41,6 +41,31 @@ ion-title {
   letter-spacing: 0;
 }
 
+.toolbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.toolbar-brand img {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(71, 60, 51, 0.12);
+}
+
+.toolbar-brand span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 ion-card-title,
 h1,
 h2,
