@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -8,12 +8,11 @@ import { Crianca, ChildCreateRequest, ChildUpdateRequest } from '../../models/cr
   providedIn: 'root'
 })
 export class ChildService {
+  private readonly http = inject(HttpClient);
   private readonly API_URL = `${environment.apiUrl}/children`;
   
   private selectedChildSubject = new BehaviorSubject<string | null>(this.getStoredChildId());
   public selectedChild$ = this.selectedChildSubject.asObservable();
-
-  constructor(private http: HttpClient) {}
 
   private getStoredChildId(): string | null {
     return localStorage.getItem('vacina_kids_crianca_selecionada');

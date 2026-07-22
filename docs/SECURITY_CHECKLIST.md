@@ -41,9 +41,10 @@ Legenda: `ATENDE`, `PARCIAL`, `NÃO ATENDE`, `NÃO TESTADO`.
 
 - Backend/migrations: verde no baseline validado.
 - Frontend `npm ci`: verde no HEAD final.
-- Frontend lint: vermelho, 16 erros.
+- Frontend lint: verde após migração mecânica para `inject()`; nenhuma regra foi desativada.
 - Frontend testes: 2 verdes, cobertura insuficiente.
 - Frontend build: verde com warnings.
-- Docker build: verde enquanto daemon disponível; runtime não root falhou.
+- Docker Compose config: verde.
+- Docker build/runtime: evidência inicial mostrou build verde e processo root, mas a imagem do estado final não pôde ser revalidada porque o daemon não respondeu.
 
-Status da fase: `REPROVADA`. Não iniciar Fase 1.
+Status da fase: `REPROVADA` pelo gate Docker pendente. Não iniciar Fase 1.

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   IonIcon,
@@ -29,7 +29,10 @@ import { AuthService } from '../services/auth/auth.service';
   imports: [IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs, RouterLink, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton],
 })
 export class TabsPage {
-  constructor(private authService: AuthService, private router: Router) {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
+  constructor() {
     addIcons({
       documentTextOutline,
       medkitOutline,

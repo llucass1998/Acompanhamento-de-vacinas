@@ -5,12 +5,13 @@
 | Área | Comando/prova | Resultado |
 |---|---|---|
 | Backend | `./mvnw.cmd -ntp clean verify` com DB temporário | 38/38 PASSARAM; build passou |
-| Migrations | inicialização Flyway em PostgreSQL 16 vazio | V1–V7 PASSARAM |
-| Frontend install | `npm ci` em worktree isolado `12fe3da` | PASSOU |
-| Frontend lint | `npm run lint` | FALHOU, 16 erros |
+| Migrations | inicialização Flyway em PostgreSQL 18.4 vazio | V1–V7 PASSARAM; aviso de suporte Flyway até PG 17 |
+| Frontend install | `npm ci` em worktree isolado | PASSOU, 1212 packages |
+| Frontend lint | `npm run lint` após remediação | PASSOU, zero erro |
 | Frontend unit | ChromeHeadless | 2/2 PASSARAM |
 | Frontend build | `npm run build` | PASSOU com warnings |
-| Dockerfile backend | build pull/no-cache | PASSOU |
+| Docker Compose | `docker compose config --quiet` | PASSOU |
+| Dockerfile backend | build pull/no-cache no estado final | NÃO EXECUTADO; daemon sem resposta |
 
 ## Testes positivos existentes
 

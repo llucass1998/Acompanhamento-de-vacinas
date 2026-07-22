@@ -4,7 +4,7 @@
 
 O sistema possui uma base backend funcional, DTOs, transações, alguns filtros de propriedade, hash de senha, hash/rotação simples de refresh e constraints úteis. Entretanto, ainda não implementa defesa em profundidade: frontend e backend estão incompatíveis, tokens web ficam em `localStorage`, o interceptor pode vazar Bearer para qualquer origem HTTP, o banco runtime é superuser e não há RLS, containers rodam como root e não existe CI de segurança.
 
-O baseline final está vermelho por 16 erros de lint. A Fase 0 é, portanto, reprovada e a Fase 1 não pode começar.
+Os 16 erros de lint foram corrigidos na remediação autorizada e os gates frontend, backend e migrations ficaram verdes. O baseline continua vermelho porque o daemon Docker não respondeu e a imagem do estado final não pôde ser revalidada. A Fase 0 permanece reprovada e a Fase 1 não pode começar.
 
 ## Cobertura do checklist
 
@@ -19,7 +19,8 @@ O baseline final está vermelho por 16 erros de lint. A Fase 0 é, portanto, rep
 - [x] Testes/backend/build/migrations executados em banco temporário.
 - [x] Frontend final validado em worktree isolado.
 - [x] Dockerfile construído e runtime inspecionado enquanto daemon estava disponível.
-- [ ] Baseline completamente verde: lint frontend falhou.
+- [x] Lint, testes e builds frontend/backend verdes após remediação.
+- [ ] Baseline completamente verde: build/runtime Docker final não revalidado.
 
 ## Controles presentes
 
@@ -61,4 +62,4 @@ O registro completo está em `.planning/codebase/CONCERNS.md`. Prioridade:
 
 ## Conclusão da fase
 
-O mapa é suficiente para planejar hardening, mas o gate de qualidade não está verde. A auditoria não declara o sistema seguro e não autoriza a Fase 1.
+O mapa é suficiente para planejar hardening, mas o gate Docker ainda não está verde. A auditoria não declara o sistema seguro e não autoriza a Fase 1.

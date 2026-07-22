@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -8,10 +8,9 @@ import { VaccinationRecord, VaccinationSchedule, ResumoVacinal } from '../../mod
   providedIn: 'root'
 })
 export class VaccinationRecordService {
+  private readonly http = inject(HttpClient);
   private readonly SCHEDULES_API_URL = `${environment.apiUrl}/vaccination-schedules`;
   private readonly RECORDS_API_URL = `${environment.apiUrl}/vaccination-records`;
-
-  constructor(private http: HttpClient) {}
 
   public getChildSchedule(childId: string): Observable<any> {
     return this.http.get<any>(`${this.SCHEDULES_API_URL}/child/${childId}`);

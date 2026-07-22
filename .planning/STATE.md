@@ -3,7 +3,7 @@
 ## Fase atual
 
 - Fase: `00-audit`.
-- Status: `REPROVADA`.
+- Status: `REPROVADA` após remediação parcial; código, testes, build e migrations estão verdes, mas o gate Docker não pôde ser reexecutado.
 - Último checkpoint aprovado: nenhum neste ciclo de segurança.
 - Próxima fase: bloqueada; não iniciar Fase 1.
 
@@ -28,22 +28,23 @@ Correspondência manual usada:
 - Raiz: `C:\Acompanhamento-de-vacinas-main`.
 - Branch: `master`.
 - Início da auditoria: `821e5ea`, worktree limpo.
-- HEAD final mapeado: `12fe3da`.
-- Mudanças concorrentes: integração frontend foi commitada durante a auditoria; depois surgiram alterações locais em `application.yml` e `application-local.yml`. Elas pertencem ao usuário, não foram alteradas nem incluídas no commit documental.
+- HEAD final mapeado: `12fe3da`; documentação da auditoria em `108f983`.
+- Mudanças concorrentes: integração frontend foi commitada durante a auditoria; depois surgiram alterações locais em `application.yml`, `application-local.yml` e `environment.ts` para configuração local/porta 8081, além do launcher não rastreado `backend/start_front.ps1`. Elas pertencem ao usuário, não foram alteradas nem incluídas nos commits da auditoria.
 
 ## Testes e builds
 
-- Backend: 38 testes, `clean verify` e JAR `PASSARAM` contra PostgreSQL 16 temporário em banco vazio; target Java 21, runtime local JDK 26.
-- Flyway: V1–V7 `PASSARAM` em schema vazio.
+- Backend revalidado: 38 testes, `clean verify` e JAR `PASSARAM` contra PostgreSQL 18.4 temporário em banco vazio; target Java 21, runtime local JDK 26.
+- Flyway: V1–V7 `PASSARAM` em schema vazio; houve aviso porque a versão embarcada declara suporte testado somente até PostgreSQL 17.
 - Frontend no estado anterior a `12fe3da`: 7 testes, lint e build passaram, mas esse resultado ficou obsoleto após a mudança concorrente.
-- Frontend em `12fe3da`, worktree isolado: `npm ci` passou; lint falhou com 16 erros; 2 testes passaram; build passou com warnings de imports não usados.
+- Frontend após remediação, em worktree isolado: `npm ci`, lint, 2 testes e build `PASSARAM`; permanecem warnings de imports Ionic não usados.
 - Dockerfile backend: build `--pull --no-cache` passou; runtime observado como `uid=0(root)` e `/app` gravável.
 - HTTP local: recurso protegido 401; USER/ADMIN sem token 401; health 200; Swagger UI 200; OpenAPI JSON 500; CORS preflight 401 sem allow-origin.
 - Dependências npm: produção, 0 vulnerabilidades; árvore completa, 22 (1 crítica, 10 altas, 7 moderadas, 4 baixas).
+- Compose: `docker compose config --quiet` passou. O daemon Docker não respondeu a duas tentativas de `docker version`; o serviço `com.docker.service` estava parado, portanto build/runtime não foram reexecutados.
 
 ## Decisões
 
-- Nenhum código de aplicação foi alterado na Fase 0.
+- A remediação autorizada alterou apenas o padrão de injeção Angular, migrando 16 parâmetros de construtor para `inject()` sem mudar fluxos funcionais ou controles de segurança.
 - Frontend é tratado como não confiável; guard e storage não contam como controle.
 - Banco temporário isolado foi usado para não tocar no banco de desenvolvimento existente.
 - Nenhuma correção de segurança foi misturada com a auditoria.
@@ -51,11 +52,14 @@ Correspondência manual usada:
 
 ## Bloqueios
 
-1. Lint frontend vermelho.
-2. Contratos frontend/backend incompatíveis e URL de produção placeholder.
-3. Configurações do backend sendo alteradas concorrentemente e ainda não verificadas no estado final.
-4. Docker daemon indisponível ao final da limpeza; remoção da tag temporária não foi confirmada.
+1. Docker daemon indisponível; imagem e runtime do estado final não puderam ser revalidados.
+2. `application.yml`, `application-local.yml` e `environment.ts` continuam modificados pelo usuário; os YAMLs contêm credenciais/chave local hardcoded. Permanecem fora do commit; backend foi isolado por overrides e frontend foi revalidado incluindo o `environment.ts` corrente.
+
+## Vulnerabilidades abertas
+
+- Os 30 achados F0-001–F0-030 continuam registrados em `.planning/codebase/CONCERNS.md`; a remediação de lint não é tratada como correção de segurança.
+- Contratos frontend/backend incompatíveis e URL de produção placeholder continuam abertos para fase apropriada.
 
 ## Próxima ação autorizada
 
-Estabilizar o worktree e corrigir exclusivamente o baseline da Fase 0, com novo plano e nova verificação. `CONTINUAR` não pode promover a Fase 1 enquanto o gate permanecer vermelho.
+O usuário deve iniciar/restaurar o Docker Desktop fora deste fluxo e enviar `CONTINUAR`. A próxima execução revalidará somente build/runtime Docker e fechará o check-in da Fase 0; a Fase 1 seguirá bloqueada até um novo `CONTINUAR` após checkpoint aprovado.

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
@@ -13,6 +13,10 @@ import { AuthService } from '../../../services/auth/auth.service';
   imports: [IonicModule, CommonModule, FormsModule, RouterModule]
 })
 export class RegisterPage {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly toastController = inject(ToastController);
+
   userData = {
     name: '',
     email: '',
@@ -22,12 +26,6 @@ export class RegisterPage {
   
   isLoading = false;
   errorMessage = '';
-
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private toastController: ToastController
-  ) { }
 
   async register() {
     if (!this.userData.name || !this.userData.email || !this.userData.password) {

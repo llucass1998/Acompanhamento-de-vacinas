@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -8,9 +8,8 @@ import { Vaccine } from '../../models/vacina.model';
   providedIn: 'root'
 })
 export class VaccineService {
+  private readonly http = inject(HttpClient);
   private readonly API_URL = `${environment.apiUrl}/vaccines`;
-
-  constructor(private http: HttpClient) {}
 
   public getVaccines(): Observable<any> {
     return this.http.get<any>(this.API_URL);

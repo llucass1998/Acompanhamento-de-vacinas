@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -13,6 +13,9 @@ import { AuthService } from '../../../services/auth/auth.service';
   imports: [IonicModule, CommonModule, FormsModule, RouterModule]
 })
 export class LoginPage implements OnInit {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   credentials = {
     email: '',
     password: ''
@@ -20,11 +23,6 @@ export class LoginPage implements OnInit {
   
   isLoading = false;
   errorMessage = '';
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
 
   ngOnInit() {
     if (this.authService.isAuthenticated) {
