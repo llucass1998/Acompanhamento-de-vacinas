@@ -2,6 +2,7 @@ package com.lucas.vacinakids.vaccinationrecord.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ public record VaccinationRecordRequest(
         @PastOrPresent(message = "Applied date cannot be in the future")
         LocalDate appliedDate,
         
-        String location,
-        String batchNumber,
-        String observations
+        @Size(max = 160, message = "Location must not exceed 160 characters") String location,
+        @Size(max = 120, message = "Batch number must not exceed 120 characters") String batchNumber,
+        @Size(max = 1000, message = "Observations must not exceed 1000 characters") String observations
 ) {}

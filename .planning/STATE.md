@@ -95,3 +95,9 @@ Aguardar novo `CONTINUAR` para iniciar a Fase 2 — frontend Angular/Ionic.
 - Access JWT exige `typ=access`, subject e email após assinatura/expiração válidas.
 - Backend: 38 testes passaram.
 - Próxima ação: novo `CONTINUAR` para Fase 4 — Controllers e DTOs.
+
+## Resultado da Fase 4
+
+- Contratos receberam limites de tamanho, rejeição de campos desconhecidos e teto de paginação.
+- 38 testes backend passaram.
+- Próxima ação: novo `CONTINUAR` para Fase 5 — Services e domínio.

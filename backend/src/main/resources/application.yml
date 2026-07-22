@@ -1,4 +1,11 @@
 spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+  data:
+    web:
+      pageable:
+        max-page-size: 50
   profiles:
     active: local
 
