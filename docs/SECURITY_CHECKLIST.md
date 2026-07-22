@@ -49,3 +49,11 @@ Legenda: `ATENDE`, `PARCIAL`, `NÃO ATENDE`, `NÃO TESTADO`.
 - Ciclo Compose: config/down/build/up/ps passou; volume preservado e DB voltou saudável.
 
 Status da fase: `APROVADA` como auditoria completa. Não iniciar Fase 1 sem `CONTINUAR`.
+-
+## Fase 1 — modelo de ameaças
+
+- [x] Fronteiras de confiança documentadas.
+- [x] Fluxos Mermaid documentados.
+- [x] Casos de abuso obrigatórios classificados.
+- [x] Riscos críticos com três camadas planejadas.
+- [ ] Controles implementados e testados (fases posteriores).

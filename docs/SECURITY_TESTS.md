@@ -73,3 +73,10 @@
 O HEAD final possui apenas dois testes genéricos; auth, guard, interceptor, storage, concorrência de refresh e services HTTP não são exercidos. Build e TypeScript também não detectaram os paths/DTOs incompatíveis com o backend.
 
 Uma suíte específica de defesa entre camadas será criada somente na Fase 12, após as camadas existirem e os gates anteriores estarem verdes.
+-
+## Fase 1 — evidência documental
+
+- Modelo: `docs/THREAT_MODEL.md`.
+- Discussão: `.planning/phases/01-threat-model/DISCUSSION.md`.
+- Plano: `.planning/phases/01-threat-model/PLAN.md`.
+- Resultado: fronteiras e casos de abuso registrados; testes de ataque permanecem pendentes nas fases de implementação.

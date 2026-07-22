@@ -72,3 +72,13 @@ Correspondência manual usada:
 ## Próxima ação autorizada
 
 Aguardar. Somente um novo `CONTINUAR` autoriza iniciar a discussão e o plano da Fase 1 — modelo de ameaças.
+-
+## Resultado da Fase 1
+
+- Discussão, plano e modelo registrados em `.planning/phases/01-threat-model/` e `docs/THREAT_MODEL.md`.
+- Nenhum código, migration, Docker ou CI foi alterado.
+- Controles foram classificados como planejados; riscos residuais permanecem até as fases de implementação.
+
+## Próxima ação autorizada
+
+Aguardar novo `CONTINUAR` para iniciar a Fase 2 — frontend Angular/Ionic.
