@@ -1,0 +1,68 @@
+﻿<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <span class="toolbar-brand">
+        <img src="assets/logo-vacina.png" alt="" aria-hidden="true">
+        <span>Historico</span>
+      </span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-container">
+    <section class="hero-card">
+      <div>
+        <p class="hero-tag">Carteira digital</p>
+        <h1>Histórico de {{ crianca.nome }}</h1>
+        <p>
+          Consulte rapidamente as vacinas já registradas como aplicadas para reduzir a dependência da carteira física.
+        </p>
+      </div>
+
+      <div class="hero-kpis">
+        <div class="kpi-card">
+          <span>Registros</span>
+          <strong>{{ historico.length }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <div class="timeline" *ngIf="historico.length > 0">
+      <article class="timeline-item" *ngFor="let vacina of historico">
+        <span class="timeline-dot" aria-hidden="true"></span>
+        <div>
+          <div class="card-title-row">
+            <div>
+              <h3>{{ vacina.nome }} · {{ vacina.dose }}</h3>
+              <p class="muted">{{ vacina.descricao }}</p>
+            </div>
+            <span class="badge-status status-tomada">Tomada</span>
+          </div>
+
+          <div class="vaccine-meta">
+            <div class="meta-item">
+              <span>Aplicada em</span>
+              <strong>{{ vacina.dataAplicacao | date:'dd/MM/yyyy' }}</strong>
+            </div>
+
+            <div class="meta-item" *ngIf="vacina.localAplicacao">
+              <span>Local</span>
+              <strong>{{ vacina.localAplicacao }}</strong>
+            </div>
+
+            <div class="meta-item" *ngIf="vacina.observacao">
+              <span>Observação</span>
+              <strong>{{ vacina.observacao }}</strong>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <section class="empty-state" *ngIf="historico.length === 0">
+      <h2>Nenhuma vacina registrada</h2>
+      <p class="muted">Quando uma dose for marcada como tomada, ela aparecerá aqui no histórico desta criança.</p>
+    </section>
+  </div>
+</ion-content>

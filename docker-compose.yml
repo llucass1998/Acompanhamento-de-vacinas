@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: vacinakids_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-vacina_kids}
+      POSTGRES_USER: ${POSTGRES_USER:-vacina_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-senha_local}
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vacina_user} -d ${POSTGRES_DB:-vacina_kids}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

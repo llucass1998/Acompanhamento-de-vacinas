@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5435/vacina_kids
+    username: vacina_user
+    password: senha_local
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5435/vacina_kids
+    user: vacina_user
+    password: senha_local
+
+app:
+  jwt:
+    secret: a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7a8b9c0d1e2f3
+    access-expiration-minutes: 60
+    refresh-expiration-minutes: 1440
+    refresh-expiration-days: 1

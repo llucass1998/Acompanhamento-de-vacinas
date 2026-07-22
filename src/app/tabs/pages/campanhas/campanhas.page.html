@@ -1,0 +1,70 @@
+﻿<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <span class="toolbar-brand">
+        <img src="assets/logo-vacina.png" alt="" aria-hidden="true">
+        <span>Campanhas</span>
+      </span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-container">
+    <section class="hero-card">
+      <div>
+        <p class="hero-tag">Saúde infantil</p>
+        <h1>Campanhas de vacinação</h1>
+        <p>
+          Veja ações ativas e orientações para públicos infantis prioritários. Informações de campanha ajudam a família a não perder janelas importantes.
+        </p>
+      </div>
+
+      <div class="hero-kpis">
+        <div class="kpi-card">
+          <span>Ativas</span>
+          <strong>{{ campanhasAtivas.length }}</strong>
+        </div>
+        <div class="kpi-card">
+          <span>Total</span>
+          <strong>{{ campanhas.length }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-row">
+      <div>
+        <h2 class="section-heading">Campanhas disponíveis</h2>
+        <p class="section-caption">As campanhas ativas aparecem destacadas para facilitar a ação do responsável.</p>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <article class="campaign-card" *ngFor="let campanha of campanhas" [class.active]="campanha.ativa">
+        <div class="campaign-top">
+          <div>
+            <h3>{{ campanha.titulo }}</h3>
+            <p class="muted">{{ campanha.periodo }}</p>
+          </div>
+
+          <span
+            class="badge-status"
+            [class.status-tomada]="campanha.ativa"
+            [class.status-pendente]="!campanha.ativa"
+          >
+            {{ campanha.ativa ? 'Ativa' : 'Em breve' }}
+          </span>
+        </div>
+
+        <p>{{ campanha.descricao }}</p>
+
+        <div class="campaign-meta">
+          <div class="meta-item">
+            <span>Público</span>
+            <strong>{{ campanha.publico }}</strong>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</ion-content>
