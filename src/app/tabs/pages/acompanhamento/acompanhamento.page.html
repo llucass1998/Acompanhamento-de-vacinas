@@ -11,127 +11,125 @@
 
 <ion-content>
   <div class="page-container">
-    <section class="hero-card">
-      <div>
-        <p class="hero-tag">Situacao vacinal</p>
-        <h1>{{ crianca.nome }}</h1>
-        <p>
-          Acompanhe vacinas tomadas, pendentes e atrasadas de forma simples para cada crianca cadastrada.
-        </p>
-      </div>
-
-      <div class="progress-card" *ngIf="resumo">
-        <span class="muted">Cobertura registrada</span>
-        <strong>{{ percentualTomadas }}%</strong>
-        <div class="progress-track" aria-hidden="true">
-          <span [style.width.%]="percentualTomadas"></span>
-        </div>
-        <p class="muted">{{ resumo.tomadas }} de {{ resumo.total }} vacina(s) tomadas.</p>
-      </div>
-    </section>
-
-    <section class="warning-card" *ngIf="resumo?.atrasadas">
-      <div>
-        <p class="hero-tag">Atencao</p>
-        <h2>{{ resumo.atrasadas }} vacina(s) atrasada(s)</h2>
-        <p>Existe vacina com data prevista ultrapassada e sem registro de aplicacao.</p>
-      </div>
-    </section>
-
-    <section class="summary-grid" *ngIf="resumo">
-      <div class="summary-card">
-        <span>Total</span>
-        <strong>{{ resumo.total }}</strong>
-      </div>
-
-      <div class="summary-card taken">
-        <span>Tomadas</span>
-        <strong>{{ resumo.tomadas }}</strong>
-      </div>
-
-      <div class="summary-card pending">
-        <span>Pendentes</span>
-        <strong>{{ resumo.pendentes }}</strong>
-      </div>
-
-      <div class="summary-card late">
-        <span>Atrasadas</span>
-        <strong>{{ resumo.atrasadas }}</strong>
-      </div>
-    </section>
-
-    <div class="section-row">
-      <div>
-        <h2 class="section-heading">Vacinas da crianca</h2>
-        <p class="section-caption">Use os filtros para identificar rapidamente o que ja foi feito e o que precisa de atencao.</p>
-      </div>
+    <div *ngIf="!criancaSelecionadaId" class="empty-state" style="margin-top: 2rem;">
+      <ion-icon name="people-outline" size="large"></ion-icon>
+      <h3>Selecione uma Criança</h3>
+      <p>Vá até a aba Crianças e selecione uma criança para ver o acompanhamento vacinal.</p>
+      <ion-button routerLink="/tabs/crianca">Ir para Crianças</ion-button>
     </div>
 
-    <div class="filter-row">
-      <button type="button" [class.active-filter]="filtroStatus === 'TODAS'" (click)="filtroStatus = 'TODAS'">
-        Todas
-      </button>
-      <button type="button" [class.active-filter]="filtroStatus === 'ATRASADA'" (click)="filtroStatus = 'ATRASADA'">
-        Atrasadas
-      </button>
-      <button type="button" [class.active-filter]="filtroStatus === 'PENDENTE'" (click)="filtroStatus = 'PENDENTE'">
-        Pendentes
-      </button>
-      <button type="button" [class.active-filter]="filtroStatus === 'TOMADA'" (click)="filtroStatus = 'TOMADA'">
-        Tomadas
-      </button>
-    </div>
-
-    <div class="card-grid">
-      <article class="vaccine-card" *ngFor="let vacina of vacinasFiltradas" [ngClass]="getStatusClass(vacina.status)">
-        <div class="card-title-row">
-          <div>
-            <h3>{{ vacina.nome }}</h3>
-            <p class="muted">{{ vacina.dose }}</p>
-          </div>
-
-          <span class="badge-status" [ngClass]="getStatusClass(vacina.status)">
-            {{ getStatusLabel(vacina.status) }}
-          </span>
+    <div *ngIf="criancaSelecionadaId">
+      <section class="hero-card">
+        <div>
+          <p class="hero-tag">Situação vacinal</p>
+          <h1>Acompanhamento</h1>
+          <p>
+            Acompanhe vacinas tomadas, pendentes e atrasadas de forma simples.
+          </p>
         </div>
 
-        <p>{{ vacina.descricao }}</p>
-
-        <div class="vaccine-meta">
-          <div class="meta-item">
-            <span>Data prevista</span>
-            <strong>{{ vacina.dataPrevista | date:'dd/MM/yyyy' }}</strong>
+        <div class="progress-card" *ngIf="resumo && resumo.total > 0">
+          <span class="muted">Cobertura registrada</span>
+          <strong>{{ (resumo.tomadas / resumo.total * 100).toFixed(0) }}%</strong>
+          <div class="progress-track" aria-hidden="true">
+            <span [style.width.%]="(resumo.tomadas / resumo.total * 100)"></span>
           </div>
+          <p class="muted">{{ resumo.tomadas }} de {{ resumo.total }} vacina(s) tomadas.</p>
+        </div>
+      </section>
 
-          <div class="meta-item" *ngIf="vacina.dataAplicacao">
-            <span>Aplicada em</span>
-            <strong>{{ vacina.dataAplicacao | date:'dd/MM/yyyy' }}</strong>
-          </div>
+      <section class="warning-card" *ngIf="resumo && resumo.atrasadas > 0">
+        <div>
+          <p class="hero-tag">Atenção</p>
+          <h2>{{ resumo.atrasadas }} vacina(s) atrasada(s)</h2>
+          <p>Existe vacina com data prevista ultrapassada e sem registro de aplicação.</p>
+        </div>
+      </section>
 
-          <div class="meta-item">
-            <span>Prazo</span>
-            <strong>{{ getDiasTexto(vacina) }}</strong>
-          </div>
+      <section class="summary-grid" *ngIf="resumo">
+        <div class="summary-card">
+          <span>Total</span>
+          <strong>{{ resumo.total }}</strong>
         </div>
 
-        <p class="attention-note" *ngIf="vacina.status === 'ATRASADA'">
-          {{ getStatusDescription(vacina.status) }}
-        </p>
+        <div class="summary-card taken">
+          <span>Tomadas</span>
+          <strong>{{ resumo.tomadas }}</strong>
+        </div>
 
-        <ion-button
-          expand="block"
-          class="main-button"
-          *ngIf="vacina.status !== 'TOMADA'"
-          (click)="marcarComoTomada(vacina.id)"
-        >
-          Registrar como tomada
-        </ion-button>
-      </article>
+        <div class="summary-card pending">
+          <span>Pendentes</span>
+          <strong>{{ resumo.pendentes }}</strong>
+        </div>
+
+        <div class="summary-card late">
+          <span>Atrasadas</span>
+          <strong>{{ resumo.atrasadas }}</strong>
+        </div>
+      </section>
+
+      <div class="section-row">
+        <div>
+          <h2 class="section-heading">Vacinas da criança</h2>
+          <p class="section-caption">Use os filtros para identificar rapidamente o que já foi feito e o que precisa de atenção.</p>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <button type="button" [class.active-filter]="filtroStatus === 'todas'" (click)="filtroStatus = 'todas'">
+          Todas
+        </button>
+        <button type="button" [class.active-filter]="filtroStatus === 'ATRASADA'" (click)="filtroStatus = 'ATRASADA'">
+          Atrasadas
+        </button>
+        <button type="button" [class.active-filter]="filtroStatus === 'PENDENTE'" (click)="filtroStatus = 'PENDENTE'">
+          Pendentes
+        </button>
+        <button type="button" [class.active-filter]="filtroStatus === 'TOMADA'" (click)="filtroStatus = 'TOMADA'">
+          Tomadas
+        </button>
+      </div>
+
+      <div class="card-grid">
+        <article class="vaccine-card" *ngFor="let vacina of vacinasFiltradas" [ngClass]="vacina.status.toLowerCase()">
+          <div class="card-title-row">
+            <div>
+              <h3>{{ vacina.vaccineName }}</h3>
+              <p class="muted">{{ vacina.doseName }}</p>
+            </div>
+
+            <span class="badge-status" [ngClass]="vacina.status.toLowerCase()">
+              {{ vacina.status }}
+            </span>
+          </div>
+
+          <div class="vaccine-meta">
+            <div class="meta-item">
+              <span>Data prevista</span>
+              <strong>{{ vacina.dueDate | date:'dd/MM/yyyy' }}</strong>
+            </div>
+
+            <div class="meta-item" *ngIf="vacina.appliedDate">
+              <span>Aplicada em</span>
+              <strong>{{ vacina.appliedDate | date:'dd/MM/yyyy' }}</strong>
+            </div>
+          </div>
+
+          <ion-button
+            expand="block"
+            class="main-button"
+            *ngIf="vacina.status !== 'TOMADA'"
+            (click)="marcarComoTomada(vacina)"
+          >
+            Registrar como tomada
+          </ion-button>
+        </article>
+      </div>
+
+      <section class="empty-state" *ngIf="vacinasFiltradas.length === 0">
+        <h2>Nenhuma vacina neste filtro</h2>
+        <p class="muted">Troque o filtro para visualizar outras vacinas da criança.</p>
+      </section>
     </div>
-
-    <section class="empty-state" *ngIf="vacinasFiltradas.length === 0">
-      <h2>Nenhuma vacina neste filtro</h2>
-      <p class="muted">Troque o filtro para visualizar outras vacinas da crianca.</p>
-    </section>
   </div>
 </ion-content>

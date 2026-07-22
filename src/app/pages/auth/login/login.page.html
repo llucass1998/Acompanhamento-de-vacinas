@@ -1,0 +1,46 @@
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <div class="logo-container">
+      <img src="assets/logo-vacina.png" alt="Vacina Kids Logo" />
+      <h1>Vacina Kids</h1>
+      <p>Acompanhe a vacinação da sua família</p>
+    </div>
+
+    <ion-card>
+      <ion-card-content>
+        <ion-item lines="full">
+          <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
+          <ion-input 
+            type="email" 
+            [(ngModel)]="credentials.email" 
+            placeholder="E-mail"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item lines="full">
+          <ion-icon name="lock-closed-outline" slot="start" color="primary"></ion-icon>
+          <ion-input 
+            type="password" 
+            [(ngModel)]="credentials.password" 
+            placeholder="Senha"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <div class="error-message" *ngIf="errorMessage">
+          <ion-text color="danger">{{ errorMessage }}</ion-text>
+        </div>
+
+        <ion-button expand="block" class="ion-margin-top" (click)="login()" [disabled]="isLoading">
+          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          <span *ngIf="!isLoading">Entrar</span>
+        </ion-button>
+        
+        <div class="register-link">
+          <p>Não tem uma conta? <a routerLink="/register">Cadastre-se</a></p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

@@ -1,30 +1,39 @@
 export type StatusVacina = 'TOMADA' | 'PENDENTE' | 'ATRASADA';
 
-export interface Vacina {
-  id: number;
-  criancaId: number;
-  nome: string;
-  dose: string;
-  descricao: string;
-  dataPrevista: string;
-  dataAplicacao?: string;
-  aplicada: boolean;
-  localAplicacao?: string;
-  observacao?: string;
-  origem?: 'CALENDARIO_NACIONAL' | 'MANUAL';
+export interface Vaccine {
+  id: string;
+  name: string;
+  description: string;
+  recommendedAgeMonths: number;
 }
 
-export interface VacinaComStatus extends Vacina {
+export interface VaccineDose {
+  id: string;
+  vaccineId: string;
+  doseName: string;
+  recommendedAgeMonths: number;
+}
+
+export interface VaccinationSchedule {
+  id: string;
+  childId: string;
+  vaccineId: string;
+  vaccineName: string;
+  doseId: string;
+  doseName: string;
+  dueDate: string; // YYYY-MM-DD
   status: StatusVacina;
+  appliedDate?: string;
 }
 
-export interface Campanha {
-  id: number;
-  titulo: string;
-  descricao: string;
-  publico: string;
-  periodo: string;
-  ativa: boolean;
+export interface VaccinationRecord {
+  id: string;
+  childId: string;
+  vaccineId: string;
+  doseId: string;
+  appliedDate: string;
+  location?: string;
+  notes?: string;
 }
 
 export interface ResumoVacinal {
@@ -32,4 +41,14 @@ export interface ResumoVacinal {
   tomadas: number;
   pendentes: number;
   atrasadas: number;
+}
+
+export interface Campanha {
+  id: string;
+  title: string;
+  description: string;
+  targetAudience: string;
+  startDate: string;
+  endDate: string;
+  active: boolean;
 }

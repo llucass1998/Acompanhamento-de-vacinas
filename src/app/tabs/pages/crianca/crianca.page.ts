@@ -1,21 +1,45 @@
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  IonButton,
-  IonCard,
-  IonCardContent,
   IonContent,
   IonHeader,
-  IonInput,
+  IonTitle,
+  IonToolbar,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonButton,
+  IonIcon,
   IonItem,
   IonLabel,
-  IonTitle,
-  IonToolbar
+  IonList,
+  IonFab,
+  IonFabButton,
+  IonModal,
+  IonInput,
+  IonDatetime,
+  IonSelect,
+  IonSelectOption,
+  IonButtons,
+  IonBadge,
+  IonTextarea,
 } from '@ionic/angular/standalone';
-import { Crianca } from '../../../models/crianca.model';
+import { addIcons } from 'ionicons';
+import {
+  addOutline,
+  personCircleOutline,
+  calendarOutline,
+  checkmarkCircleOutline,
+  alertCircleOutline,
+} from 'ionicons/icons';
+
+import { Crianca, ChildCreateRequest } from '../../../models/crianca.model';
 import { ResumoVacinal } from '../../../models/vacina.model';
-import { VacinaService } from '../../../services/vacina.service';
+import { ChildService } from '../../../services/child/child.service';
+import { VaccinationRecordService } from '../../../services/vaccination-record/vaccination-record.service';
+import { forkJoin, catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-crianca',
@@ -25,35 +49,62 @@ import { VacinaService } from '../../../services/vacina.service';
   imports: [
     CommonModule,
     FormsModule,
-    IonButton,
-    IonCard,
-    IonCardContent,
     IonContent,
     IonHeader,
-    IonInput,
+    IonTitle,
+    IonToolbar,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonButton,
+    IonIcon,
     IonItem,
     IonLabel,
-    IonTitle,
-    IonToolbar
+    IonList,
+    IonFab,
+    IonFabButton,
+    IonModal,
+    IonInput,
+    IonDatetime,
+    IonSelect,
+    IonSelectOption,
+    IonButtons,
+    IonBadge,
+    IonTextarea,
   ],
 })
 export class CriancaPage implements OnInit {
-  private vacinaService = inject(VacinaService);
+  private childService = inject(ChildService);
+  private recordService = inject(VaccinationRecordService);
 
   criancas: Crianca[] = [];
-  criancaSelecionada!: Crianca;
-  resumosPorCrianca: Record<number, ResumoVacinal> = {};
-  mensagemCrianca = '';
+  criancaSelecionadaId: string | null = null;
+  resumosVacinais: Record<string, ResumoVacinal> = {};
 
-  novaCrianca = {
-    nome: '',
-    dataNascimento: '',
-    responsavel: '',
-    observacao: ''
+  isModalOpen = false;
+  novaCrianca: ChildCreateRequest = {
+    name: '',
+    birthDate: '',
+    gender: 'M',
+    notes: '',
   };
+
+  constructor() {
+    addIcons({
+      addOutline,
+      personCircleOutline,
+      calendarOutline,
+      checkmarkCircleOutline,
+      alertCircleOutline,
+    });
+  }
 
   ngOnInit() {
     this.carregarDados();
+    this.childService.selectedChild$.subscribe(id => {
+      this.criancaSelecionadaId = id;
+    });
   }
 
   ionViewWillEnter() {
@@ -61,83 +112,84 @@ export class CriancaPage implements OnInit {
   }
 
   carregarDados() {
-    this.criancas = this.vacinaService.getCriancas();
-    this.criancaSelecionada = this.vacinaService.getCriancaSelecionada();
-    this.resumosPorCrianca = this.criancas.reduce<Record<number, ResumoVacinal>>((resumos, crianca) => {
-      resumos[crianca.id] = this.vacinaService.getResumoPorCrianca(crianca.id);
-      return resumos;
-    }, {});
+    this.childService.getChildren().subscribe(response => {
+      this.criancas = response.content || [];
+      
+      // Auto select if first time and no child selected
+      if (this.criancas.length > 0 && !this.criancaSelecionadaId) {
+        this.selecionarCrianca(this.criancas[0].id);
+      }
+      
+      // Carregar resumos
+      this.criancas.forEach(c => {
+        this.recordService.getChildSummary(c.id).pipe(
+          catchError(() => of({ total: 0, tomadas: 0, pendentes: 0, atrasadas: 0 }))
+        ).subscribe(summary => {
+          this.resumosVacinais[c.id] = summary;
+        });
+      });
+    });
   }
 
-  selecionarCrianca(id: number) {
-    this.vacinaService.selecionarCrianca(id);
-    this.carregarDados();
+  selecionarCrianca(id: string) {
+    this.childService.selectChild(id);
   }
 
-  adicionarCrianca() {
-    this.mensagemCrianca = '';
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
+    if (!isOpen) {
+      this.resetarFormulario();
+    }
+  }
 
-    if (!this.novaCrianca.nome || !this.novaCrianca.dataNascimento || !this.novaCrianca.responsavel) {
-      this.mensagemCrianca = 'Preencha nome, nascimento e responsavel.';
-      return;
+  salvarCrianca() {
+    if (!this.novaCrianca.name || !this.novaCrianca.birthDate) {
+      return; // Basic validation
     }
 
-    this.vacinaService.adicionarCrianca({
-      nome: this.novaCrianca.nome,
-      dataNascimento: this.novaCrianca.dataNascimento,
-      responsavel: this.novaCrianca.responsavel,
-      observacao: this.novaCrianca.observacao
+    // Format date correctly if needed (ensure YYYY-MM-DD)
+    const formattedDate = this.novaCrianca.birthDate.split('T')[0];
+    const payload = { ...this.novaCrianca, birthDate: formattedDate };
+
+    this.childService.createChild(payload).subscribe({
+      next: (criancaSalva) => {
+        this.selecionarCrianca(criancaSalva.id);
+        this.setOpen(false);
+        this.carregarDados();
+      },
+      error: (err) => {
+        console.error('Erro ao salvar criança', err);
+      }
     });
+  }
 
+  resetarFormulario() {
     this.novaCrianca = {
-      nome: '',
-      dataNascimento: '',
-      responsavel: '',
-      observacao: ''
+      name: '',
+      birthDate: '',
+      gender: 'M',
+      notes: '',
     };
-
-    this.carregarDados();
-    this.mensagemCrianca = 'Crianca cadastrada com calendario inicial.';
   }
 
   calcularIdade(dataNascimento: string): string {
-    return this.vacinaService.calcularIdade(dataNascimento);
-  }
+    const hoje = new Date();
+    const nascimento = new Date(dataNascimento);
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const m = hoje.getMonth() - nascimento.getMonth();
 
-  getResumo(criancaId: number): ResumoVacinal {
-    return this.resumosPorCrianca[criancaId] ?? {
-      total: 0,
-      tomadas: 0,
-      pendentes: 0,
-      atrasadas: 0
-    };
-  }
-
-  getSituacaoLabel(criancaId: number): string {
-    const resumo = this.getResumo(criancaId);
-
-    if (resumo.atrasadas > 0) {
-      return `${resumo.atrasadas} vacina(s) atrasada(s)`;
+    if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
+      idade--;
     }
 
-    if (resumo.pendentes > 0) {
-      return `${resumo.pendentes} vacina(s) pendente(s)`;
+    if (idade === 0) {
+      let meses = m;
+      if (meses < 0) {
+        meses += 12;
+      }
+      return `${meses} meses`;
     }
 
-    return 'Carteira em dia';
-  }
-
-  getSituacaoClass(criancaId: number): string {
-    const resumo = this.getResumo(criancaId);
-
-    if (resumo.atrasadas > 0) {
-      return 'status-atrasada';
-    }
-
-    if (resumo.pendentes > 0) {
-      return 'status-pendente';
-    }
-
-    return 'status-tomada';
+    return `${idade} anos`;
   }
 }

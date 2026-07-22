@@ -1,25 +1,51 @@
-﻿import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonBadge,
+  IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { calendarOutline, peopleOutline } from 'ionicons/icons';
+
 import { Campanha } from '../../../models/vacina.model';
-import { VacinaService } from '../../../services/vacina.service';
+import { CampaignService } from '../../../services/campaign/campaign.service';
 
 @Component({
   selector: 'app-campanhas',
   templateUrl: './campanhas.page.html',
   styleUrls: ['./campanhas.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonHeader, IonTitle, IonToolbar],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonBadge,
+    IonIcon,
+  ],
 })
 export class CampanhasPage implements OnInit {
-  private vacinaService = inject(VacinaService);
-
+  private campaignService = inject(CampaignService);
   campanhas: Campanha[] = [];
+
+  constructor() {
+    addIcons({ calendarOutline, peopleOutline });
+  }
 
   ngOnInit() {
     this.carregarDados();
@@ -30,11 +56,11 @@ export class CampanhasPage implements OnInit {
   }
 
   carregarDados() {
-    this.campanhas = this.vacinaService.getCampanhas();
-  }
-
-  get campanhasAtivas(): Campanha[] {
-    return this.campanhas.filter(campanha => campanha.ativa);
+    this.campaignService.getCampaigns().subscribe(
+      (response) => {
+        // Handle pagination response format
+        this.campanhas = response.content || response || [];
+      }
+    );
   }
 }
-

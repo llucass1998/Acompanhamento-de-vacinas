@@ -14,129 +14,102 @@
     <section class="hero-card">
       <div>
         <p class="hero-tag">Acompanhamento familiar</p>
-        <h1>Jornada vacinal infantil em um so lugar.</h1>
+        <h1>Jornada vacinal infantil em um só lugar.</h1>
         <p>
-          Selecione cada crianca para visualizar historico, vacinas previstas, pendencias e campanhas importantes.
+          Selecione cada criança para visualizar histórico, vacinas previstas, pendências e campanhas importantes.
         </p>
       </div>
 
       <div class="hero-kpis">
         <div class="kpi-card">
-          <span>Criancas</span>
+          <span>Crianças</span>
           <strong>{{ criancas.length }}</strong>
         </div>
         <div class="kpi-card">
           <span>Selecionada</span>
-          <strong>{{ criancaSelecionada ? criancaSelecionada.nome.split(' ')[0] : '-' }}</strong>
-        </div>
-      </div>
-    </section>
-
-    <section class="selected-panel" *ngIf="criancaSelecionada">
-      <div class="child-profile">
-        <div class="avatar">{{ criancaSelecionada.nome.charAt(0) }}</div>
-        <div>
-          <p class="hero-tag">Perfil ativo</p>
-          <h2>{{ criancaSelecionada.nome }}</h2>
-          <p class="muted">
-            {{ calcularIdade(criancaSelecionada.dataNascimento) }} · Responsavel: {{ criancaSelecionada.responsavel }}
-          </p>
-          <p class="muted" *ngIf="criancaSelecionada.observacao">
-            {{ criancaSelecionada.observacao }}
-          </p>
-        </div>
-      </div>
-
-      <div class="metric-grid">
-        <div class="metric-card taken">
-          <span>Tomadas</span>
-          <strong>{{ getResumo(criancaSelecionada.id).tomadas }}</strong>
-        </div>
-        <div class="metric-card pending">
-          <span>Pendentes</span>
-          <strong>{{ getResumo(criancaSelecionada.id).pendentes }}</strong>
-        </div>
-        <div class="metric-card late">
-          <span>Atrasadas</span>
-          <strong>{{ getResumo(criancaSelecionada.id).atrasadas }}</strong>
+          <strong>{{ criancas.length > 0 && criancaSelecionadaId ? (criancas | keyvalue: undefined) : '-' }}</strong>
         </div>
       </div>
     </section>
 
     <div class="section-row">
       <div>
-        <h2 class="section-heading">Criancas cadastradas</h2>
-        <p class="section-caption">Cada perfil mantem uma situacao vacinal propria.</p>
+        <h2 class="section-heading">Crianças cadastradas</h2>
+        <p class="section-caption">Cada perfil mantém uma situação vacinal própria.</p>
       </div>
+      <ion-button size="small" (click)="setOpen(true)">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Adicionar Criança
+      </ion-button>
     </div>
 
-    <div class="child-grid">
+    <div class="child-grid" *ngIf="criancas.length > 0">
       <article
         class="child-card"
         *ngFor="let crianca of criancas"
-        [class.active-child]="criancaSelecionada && criancaSelecionada.id === crianca.id"
+        [class.active-child]="criancaSelecionadaId === crianca.id"
       >
         <div class="child-top">
           <div class="child-profile">
-            <div class="avatar">{{ crianca.nome.charAt(0) }}</div>
+            <div class="avatar">{{ crianca.name.charAt(0) }}</div>
             <div>
-              <h3>{{ crianca.nome }}</h3>
-              <p class="muted">{{ calcularIdade(crianca.dataNascimento) }}</p>
+              <h3>{{ crianca.name }}</h3>
+              <p class="muted">{{ calcularIdade(crianca.birthDate) }}</p>
             </div>
           </div>
-
-          <span class="badge-status" [ngClass]="getSituacaoClass(crianca.id)">
-            {{ getSituacaoLabel(crianca.id) }}
-          </span>
         </div>
 
-        <div class="mini-summary">
-          <span><strong>{{ getResumo(crianca.id).tomadas }}</strong> tomadas</span>
-          <span><strong>{{ getResumo(crianca.id).pendentes }}</strong> pendentes</span>
-          <span><strong>{{ getResumo(crianca.id).atrasadas }}</strong> atrasadas</span>
+        <div class="mini-summary" *ngIf="resumosVacinais[crianca.id] as resumo">
+          <span><strong>{{ resumo.tomadas }}</strong> tomadas</span>
+          <span><strong>{{ resumo.pendentes }}</strong> pendentes</span>
+          <span><strong>{{ resumo.atrasadas }}</strong> atrasadas</span>
         </div>
 
         <ion-button size="small" class="main-button compact-button" (click)="selecionarCrianca(crianca.id)">
-          Acompanhar crianca
+          {{ criancaSelecionadaId === crianca.id ? 'Acompanhando' : 'Acompanhar' }}
         </ion-button>
       </article>
     </div>
 
-    <div class="section-row">
-      <div>
-        <h2 class="section-heading">Adicionar crianca</h2>
-        <p class="section-caption">Cadastre outro filho para acompanhar separadamente.</p>
-      </div>
+    <div *ngIf="criancas.length === 0" class="empty-state">
+      <ion-icon name="people-outline" size="large"></ion-icon>
+      <h3>Nenhuma criança cadastrada</h3>
+      <p>Adicione uma criança para começar o acompanhamento vacinal.</p>
+      <ion-button (click)="setOpen(true)">Cadastrar Agora</ion-button>
     </div>
 
-    <ion-card class="info-card form-card">
-      <ion-card-content>
-        <p class="inline-message" *ngIf="mensagemCrianca">{{ mensagemCrianca }}</p>
+    <ion-modal [isOpen]="isModalOpen" (didDismiss)="setOpen(false)">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Adicionar Criança</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="setOpen(false)">Fechar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-list>
+            <ion-item>
+              <ion-input label="Nome da Criança" labelPlacement="floating" [(ngModel)]="novaCrianca.name" required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input type="date" label="Data de Nascimento" labelPlacement="floating" [(ngModel)]="novaCrianca.birthDate" required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-select label="Gênero" labelPlacement="floating" [(ngModel)]="novaCrianca.gender">
+                <ion-select-option value="M">Masculino</ion-select-option>
+                <ion-select-option value="F">Feminino</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-textarea label="Observações (Alergias, etc.)" labelPlacement="floating" [(ngModel)]="novaCrianca.notes"></ion-textarea>
+            </ion-item>
+          </ion-list>
+          <ion-button expand="block" class="ion-margin-top" (click)="salvarCrianca()">Salvar</ion-button>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
 
-        <ion-item>
-          <ion-label position="stacked">Nome</ion-label>
-          <ion-input [(ngModel)]="novaCrianca.nome" placeholder="Ex: Joao Pedro"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Data de nascimento</ion-label>
-          <ion-input type="date" [(ngModel)]="novaCrianca.dataNascimento"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Responsavel</ion-label>
-          <ion-input [(ngModel)]="novaCrianca.responsavel" placeholder="Nome do responsavel"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Observacao</ion-label>
-          <ion-input [(ngModel)]="novaCrianca.observacao" placeholder="Opcional"></ion-input>
-        </ion-item>
-
-        <ion-button expand="block" class="main-button" (click)="adicionarCrianca()">
-          Adicionar perfil
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
   </div>
 </ion-content>

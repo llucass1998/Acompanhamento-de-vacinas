@@ -1,4 +1,4 @@
-﻿<ion-header>
+<ion-header>
   <ion-toolbar>
     <ion-title>
       <span class="toolbar-brand">
@@ -13,58 +13,44 @@
   <div class="page-container">
     <section class="hero-card">
       <div>
-        <p class="hero-tag">Saúde infantil</p>
-        <h1>Campanhas de vacinação</h1>
-        <p>
-          Veja ações ativas e orientações para públicos infantis prioritários. Informações de campanha ajudam a família a não perder janelas importantes.
-        </p>
-      </div>
-
-      <div class="hero-kpis">
-        <div class="kpi-card">
-          <span>Ativas</span>
-          <strong>{{ campanhasAtivas.length }}</strong>
-        </div>
-        <div class="kpi-card">
-          <span>Total</span>
-          <strong>{{ campanhas.length }}</strong>
-        </div>
+        <p class="hero-tag">Avisos e comunicados</p>
+        <h1>Campanhas ativas</h1>
+        <p>Fique por dentro das iniciativas do Ministério da Saúde e proteja sua família.</p>
       </div>
     </section>
 
-    <div class="section-row">
-      <div>
-        <h2 class="section-heading">Campanhas disponíveis</h2>
-        <p class="section-caption">As campanhas ativas aparecem destacadas para facilitar a ação do responsável.</p>
-      </div>
-    </div>
-
-    <div class="card-grid">
-      <article class="campaign-card" *ngFor="let campanha of campanhas" [class.active]="campanha.ativa">
-        <div class="campaign-top">
-          <div>
-            <h3>{{ campanha.titulo }}</h3>
-            <p class="muted">{{ campanha.periodo }}</p>
-          </div>
-
-          <span
-            class="badge-status"
-            [class.status-tomada]="campanha.ativa"
-            [class.status-pendente]="!campanha.ativa"
-          >
-            {{ campanha.ativa ? 'Ativa' : 'Em breve' }}
-          </span>
+    <div class="campaign-grid">
+      <article class="campaign-card" *ngFor="let campanha of campanhas">
+        <div class="campaign-header">
+          <h3>{{ campanha.title }}</h3>
+          <span class="badge-status active-campaign">Em andamento</span>
         </div>
 
-        <p>{{ campanha.descricao }}</p>
+        <p class="campaign-description">{{ campanha.description }}</p>
 
         <div class="campaign-meta">
           <div class="meta-item">
-            <span>Público</span>
-            <strong>{{ campanha.publico }}</strong>
+            <ion-icon name="people-outline"></ion-icon>
+            <div>
+              <span>Público-alvo</span>
+              <strong>{{ campanha.targetAudience }}</strong>
+            </div>
+          </div>
+
+          <div class="meta-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <div>
+              <span>Período</span>
+              <strong>{{ campanha.startDate | date:'dd/MM' }} até {{ campanha.endDate | date:'dd/MM/yyyy' }}</strong>
+            </div>
           </div>
         </div>
       </article>
     </div>
+
+    <section class="empty-state" *ngIf="campanhas.length === 0">
+      <h2>Nenhuma campanha</h2>
+      <p class="muted">Não há campanhas de vacinação ativas no momento.</p>
+    </section>
   </div>
 </ion-content>

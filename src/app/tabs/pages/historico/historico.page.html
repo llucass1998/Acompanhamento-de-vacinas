@@ -1,9 +1,9 @@
-﻿<ion-header>
+<ion-header>
   <ion-toolbar>
     <ion-title>
       <span class="toolbar-brand">
         <img src="assets/logo-vacina.png" alt="" aria-hidden="true">
-        <span>Historico</span>
+        <span>Histórico</span>
       </span>
     </ion-title>
   </ion-toolbar>
@@ -11,58 +11,66 @@
 
 <ion-content>
   <div class="page-container">
-    <section class="hero-card">
-      <div>
-        <p class="hero-tag">Carteira digital</p>
-        <h1>Histórico de {{ crianca.nome }}</h1>
-        <p>
-          Consulte rapidamente as vacinas já registradas como aplicadas para reduzir a dependência da carteira física.
-        </p>
-      </div>
-
-      <div class="hero-kpis">
-        <div class="kpi-card">
-          <span>Registros</span>
-          <strong>{{ historico.length }}</strong>
-        </div>
-      </div>
-    </section>
-
-    <div class="timeline" *ngIf="historico.length > 0">
-      <article class="timeline-item" *ngFor="let vacina of historico">
-        <span class="timeline-dot" aria-hidden="true"></span>
-        <div>
-          <div class="card-title-row">
-            <div>
-              <h3>{{ vacina.nome }} · {{ vacina.dose }}</h3>
-              <p class="muted">{{ vacina.descricao }}</p>
-            </div>
-            <span class="badge-status status-tomada">Tomada</span>
-          </div>
-
-          <div class="vaccine-meta">
-            <div class="meta-item">
-              <span>Aplicada em</span>
-              <strong>{{ vacina.dataAplicacao | date:'dd/MM/yyyy' }}</strong>
-            </div>
-
-            <div class="meta-item" *ngIf="vacina.localAplicacao">
-              <span>Local</span>
-              <strong>{{ vacina.localAplicacao }}</strong>
-            </div>
-
-            <div class="meta-item" *ngIf="vacina.observacao">
-              <span>Observação</span>
-              <strong>{{ vacina.observacao }}</strong>
-            </div>
-          </div>
-        </div>
-      </article>
+    <div *ngIf="!criancaSelecionadaId" class="empty-state" style="margin-top: 2rem;">
+      <ion-icon name="people-outline" size="large"></ion-icon>
+      <h3>Selecione uma Criança</h3>
+      <p>Vá até a aba Crianças e selecione uma criança para ver o histórico vacinal.</p>
+      <ion-button routerLink="/tabs/crianca">Ir para Crianças</ion-button>
     </div>
 
-    <section class="empty-state" *ngIf="historico.length === 0">
-      <h2>Nenhuma vacina registrada</h2>
-      <p class="muted">Quando uma dose for marcada como tomada, ela aparecerá aqui no histórico desta criança.</p>
-    </section>
+    <div *ngIf="criancaSelecionadaId">
+      <section class="hero-card">
+        <div>
+          <p class="hero-tag">Doses aplicadas</p>
+          <h1>Histórico Completo</h1>
+          <p>
+            Consulte todas as vacinas já registradas para esta criança.
+          </p>
+        </div>
+      </section>
+
+      <div class="timeline" *ngIf="historico.length > 0">
+        <div class="timeline-item" *ngFor="let registro of historico">
+          <div class="timeline-marker">
+            <ion-icon name="checkmark-circle"></ion-icon>
+          </div>
+          <div class="timeline-content">
+            <article class="history-card">
+              <div class="card-title-row">
+                <div>
+                  <h3>{{ registro.vaccine.name }}</h3>
+                  <p class="muted">{{ registro.dose.doseName }}</p>
+                </div>
+              </div>
+
+              <div class="vaccine-meta">
+                <div class="meta-item">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <span><strong>{{ registro.appliedDate | date:'dd/MM/yyyy' }}</strong></span>
+                </div>
+
+                <div class="meta-item" *ngIf="registro.location">
+                  <ion-icon name="location-outline"></ion-icon>
+                  <span>{{ registro.location }}</span>
+                </div>
+              </div>
+              
+              <p class="muted" *ngIf="registro.notes" style="margin-top: 0.5rem; font-size: 0.9rem;">
+                <ion-icon name="document-text-outline" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                {{ registro.notes }}
+              </p>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <section class="empty-state" *ngIf="historico.length === 0">
+        <div class="timeline-marker" style="margin: 0 auto; margin-bottom: 1rem;">
+          <ion-icon name="calendar-outline" size="large" color="medium"></ion-icon>
+        </div>
+        <h2>Nenhum registro</h2>
+        <p class="muted">Nenhuma vacina foi registrada como tomada para esta criança ainda.</p>
+      </section>
+    </div>
   </div>
 </ion-content>

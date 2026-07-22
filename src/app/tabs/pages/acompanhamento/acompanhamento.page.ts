@@ -1,35 +1,87 @@
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
-  IonButton,
   IonContent,
   IonHeader,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonBadge,
+  IonIcon,
+  IonButton,
+  IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  checkmarkCircle,
+  timeOutline,
+  alertCircle,
+  calendarOutline,
+  medicalOutline,
+} from 'ionicons/icons';
 
-import { Crianca } from '../../../models/crianca.model';
-import { ResumoVacinal, StatusVacina, VacinaComStatus } from '../../../models/vacina.model';
-import { VacinaService } from '../../../services/vacina.service';
+import { ResumoVacinal, VaccinationSchedule } from '../../../models/vacina.model';
+import { ChildService } from '../../../services/child/child.service';
+import { VaccinationRecordService } from '../../../services/vaccination-record/vaccination-record.service';
 
 @Component({
   selector: 'app-acompanhamento',
   templateUrl: './acompanhamento.page.html',
   styleUrls: ['./acompanhamento.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonButton, IonContent, IonHeader, IonTitle, IonToolbar],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonBadge,
+    IonIcon,
+    IonButton,
+    IonSearchbar,
+    IonSegment,
+    IonSegmentButton,
+    IonLabel,
+  ],
 })
 export class AcompanhamentoPage implements OnInit {
-  private vacinaService = inject(VacinaService);
+  private childService = inject(ChildService);
+  private recordService = inject(VaccinationRecordService);
 
-  crianca!: Crianca;
-  vacinas: VacinaComStatus[] = [];
-  resumo!: ResumoVacinal;
-  percentualTomadas = 0;
-  filtroStatus: StatusVacina | 'TODAS' = 'TODAS';
+  criancaSelecionadaId: string | null = null;
+  vacinas: VaccinationSchedule[] = [];
+  resumo: ResumoVacinal = { total: 0, tomadas: 0, pendentes: 0, atrasadas: 0 };
+  
+  filtroStatus: string = 'todas';
+  termoBusca: string = '';
+
+  constructor() {
+    addIcons({
+      checkmarkCircle,
+      timeOutline,
+      alertCircle,
+      calendarOutline,
+      medicalOutline,
+    });
+  }
 
   ngOnInit() {
-    this.carregarDados();
+    this.childService.selectedChild$.subscribe(id => {
+      this.criancaSelecionadaId = id;
+      this.carregarDados();
+    });
   }
 
   ionViewWillEnter() {
@@ -37,66 +89,73 @@ export class AcompanhamentoPage implements OnInit {
   }
 
   carregarDados() {
-    this.crianca = this.vacinaService.getCriancaSelecionada();
-    this.vacinas = this.vacinaService.getVacinasPorCrianca(this.crianca.id);
-    this.resumo = this.vacinaService.getResumoPorCrianca(this.crianca.id);
-    this.percentualTomadas = this.resumo.total > 0
-      ? Math.round((this.resumo.tomadas / this.resumo.total) * 100)
-      : 0;
-  }
-
-  marcarComoTomada(vacinaId: number) {
-    this.vacinaService.marcarComoTomada(vacinaId);
-    this.carregarDados();
-  }
-
-  get vacinasFiltradas(): VacinaComStatus[] {
-    if (this.filtroStatus === 'TODAS') {
-      return this.vacinas;
+    if (!this.criancaSelecionadaId) {
+      this.vacinas = [];
+      this.resumo = { total: 0, tomadas: 0, pendentes: 0, atrasadas: 0 };
+      return;
     }
 
-    return this.vacinas.filter(vacina => vacina.status === this.filtroStatus);
+    this.recordService.getChildSchedule(this.criancaSelecionadaId).subscribe(
+      (response) => {
+        this.vacinas = response;
+      }
+    );
+
+    this.recordService.getChildSummary(this.criancaSelecionadaId).subscribe(
+      (summary) => {
+        this.resumo = summary;
+      }
+    );
   }
 
-  getStatusClass(status: StatusVacina): string {
-    return `status-${status.toLowerCase()}`;
+  get vacinasFiltradas() {
+    let filtradas = this.vacinas;
+
+    if (this.filtroStatus !== 'todas') {
+      filtradas = filtradas.filter(
+        (v) => v.status === this.filtroStatus.toUpperCase()
+      );
+    }
+
+    if (this.termoBusca && this.termoBusca.trim() !== '') {
+      const termo = this.termoBusca.toLowerCase();
+      filtradas = filtradas.filter(
+        (v) =>
+          v.vaccineName.toLowerCase().includes(termo) ||
+          v.doseName.toLowerCase().includes(termo)
+      );
+    }
+
+    return filtradas;
   }
 
-  getStatusLabel(status: StatusVacina): string {
-    const labels: Record<StatusVacina, string> = {
-      TOMADA: 'Tomada',
-      PENDENTE: 'Pendente',
-      ATRASADA: 'Atrasada'
+  marcarComoTomada(vacina: VaccinationSchedule) {
+    if (!this.criancaSelecionadaId) return;
+
+    const recordPayload = {
+      childId: this.criancaSelecionadaId,
+      vaccineId: vacina.vaccineId,
+      doseId: vacina.doseId,
+      appliedDate: new Date().toISOString().split('T')[0]
     };
 
-    return labels[status];
+    this.recordService.registerDose(recordPayload).subscribe({
+      next: () => {
+        this.carregarDados(); // Reload data after successful registration
+      },
+      error: (err) => {
+        console.error('Erro ao registrar vacina', err);
+      }
+    });
   }
 
-  getDiasTexto(vacina: VacinaComStatus): string {
-    const dias = this.vacinaService.getDiasParaVacina(vacina);
+  getDiasParaVacina(vacina: VaccinationSchedule): number {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const prevista = new Date(vacina.dueDate);
+    prevista.setHours(0, 0, 0, 0);
 
-    if (vacina.status === 'TOMADA') {
-      return 'Dose ja registrada.';
-    }
-
-    if (dias < 0) {
-      return `${Math.abs(dias)} dia(s) de atraso.`;
-    }
-
-    if (dias === 0) {
-      return 'Prevista para hoje.';
-    }
-
-    return `Faltam ${dias} dia(s).`;
-  }
-
-  getStatusDescription(status: StatusVacina): string {
-    const descriptions: Record<StatusVacina, string> = {
-      TOMADA: 'Dose ja registrada no historico vacinal.',
-      PENDENTE: 'Dose prevista para uma data futura.',
-      ATRASADA: 'Data prevista ultrapassada. Atencao necessaria.'
-    };
-
-    return descriptions[status];
+    const diffTime = prevista.getTime() - hoje.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 }

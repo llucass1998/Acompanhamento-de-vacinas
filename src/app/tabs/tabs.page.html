@@ -1,21 +1,32 @@
-﻿<ion-tabs>
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Vacina Kids</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-tabs>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="crianca" routerLink="/tabs/crianca" routerDirection="root">
+    <ion-tab-button tab="crianca" href="/tabs/crianca">
       <ion-icon name="people-outline"></ion-icon>
       <ion-label>Crianças</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="acompanhamento" routerLink="/tabs/acompanhamento" routerDirection="root">
+    <ion-tab-button tab="acompanhamento" href="/tabs/acompanhamento">
       <ion-icon name="medkit-outline"></ion-icon>
-      <ion-label>Acompanhar</ion-label>
+      <ion-label>Vacinas</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="historico" routerLink="/tabs/historico" routerDirection="root">
+    <ion-tab-button tab="historico" href="/tabs/historico">
       <ion-icon name="document-text-outline"></ion-icon>
       <ion-label>Histórico</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="campanhas" routerLink="/tabs/campanhas" routerDirection="root">
+    <ion-tab-button tab="campanhas" href="/tabs/campanhas">
       <ion-icon name="megaphone-outline"></ion-icon>
       <ion-label>Campanhas</ion-label>
     </ion-tab-button>

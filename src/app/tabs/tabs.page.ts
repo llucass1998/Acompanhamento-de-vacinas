@@ -1,33 +1,46 @@
-﻿import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import {
   IonIcon,
   IonLabel,
   IonTabBar,
   IonTabButton,
-  IonTabs
+  IonTabs,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   documentTextOutline,
   medkitOutline,
   megaphoneOutline,
-  peopleOutline
+  peopleOutline,
+  logOutOutline
 } from 'ionicons/icons';
+import { AuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs.page.html',
   standalone: true,
-  imports: [IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs, RouterLink],
+  imports: [IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs, RouterLink, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton],
 })
 export class TabsPage {
-  constructor() {
+  constructor(private authService: AuthService, private router: Router) {
     addIcons({
       documentTextOutline,
       medkitOutline,
       megaphoneOutline,
-      peopleOutline
+      peopleOutline,
+      logOutOutline
     });
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

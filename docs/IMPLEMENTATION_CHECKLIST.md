@@ -31,3 +31,12 @@
 - [x] Validar conexão real com PostgreSQL.
 - [x] Validar execução das migrations.
 - [x] Validar build.
+
+## FASE 8 — INTEGRAÇÃO FRONTEND (ANGULAR/IONIC) x BACKEND
+- [x] Configurar URL da API (`environment.ts` e `environment.prod.ts`).
+- [x] Criar/Ajustar serviço de Autenticação (`auth.service.ts`) para os endpoints `/api/v1/auth/login` e `register`.
+- [x] Criar Interceptor JWT para injetar o token no header `Authorization: Bearer <token>` em requisições protegidas.
+- [x] Criar telas de Login e Registro no Ionic (se não existirem) e proteger as rotas da aplicação (AuthGuard).
+- [x] Refatorar os serviços (ex: `crianca.service.ts`, `vacina.service.ts`, etc.) para substituir chamadas do `localStorage` pelo `HttpClient` chamando a API Spring Boot.
+- [x] Adaptar as models do Frontend (TypeScript) para coincidir exatamente com os DTOs do Backend (campos em inglês/camelCase mapeados para os formulários).
+- [ ] Testar integração dos módulos: Cadastro de Crianças, Consulta de Calendário/Histórico, Aplicação de Dose e Consulta de Campanhas.
