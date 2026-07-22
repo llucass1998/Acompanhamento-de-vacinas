@@ -120,3 +120,5 @@ Aguardar novo `CONTINUAR` para iniciar a Fase 2 — frontend Angular/Ionic.
 - Suíte backend e migrations V1–V9 passaram.
 - Fase REPROVADA: datasource atual ainda usa `vacina_user` superuser/BYPASSRLS e o Spring ainda não define `app.current_user_id`.
 - Próxima ação: corrigir este bloqueio antes de iniciar a Fase 8.
+
+- `RlsUserContextAspect` adicionado para `SET LOCAL`, porém gate permanece vermelho porque a role efetiva de teste/local ainda não foi trocada para `vacina_app` sem bypass.
