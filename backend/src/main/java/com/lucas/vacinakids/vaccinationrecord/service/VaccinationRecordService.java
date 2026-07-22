@@ -42,6 +42,10 @@ public class VaccinationRecordService {
     @Transactional
     public VaccinationRecordResponse registerDose(UUID userId, UUID childId, VaccinationRecordRequest request) {
         Child child = validateChildAccess(userId, childId);
+
+        if (request.appliedDate().isBefore(child.getBirthDate())) {
+            throw new BusinessException("Applied date cannot be before child's birth date");
+        }
         
         VaccineDose dose = doseRepository.findByIdAndActiveTrue(request.doseId())
                 .orElseThrow(() -> new NotFoundException("Active vaccine dose not found"));
@@ -54,9 +58,9 @@ public class VaccinationRecordService {
                 .child(child)
                 .dose(dose)
                 .appliedDate(request.appliedDate())
-                .location(request.location())
-                .batchNumber(request.batchNumber())
-                .observations(request.observations())
+                .location(trimToNull(request.location()))
+                .batchNumber(trimToNull(request.batchNumber()))
+                .observations(trimToNull(request.observations()))
                 .build();
 
         record = recordRepository.save(record);
@@ -124,5 +128,11 @@ public class VaccinationRecordService {
                 record.getObservations(),
                 record.getProofUrl()
         );
+    }
+
+    private String trimToNull(String value) {
+        if (value == null) return null;
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 }

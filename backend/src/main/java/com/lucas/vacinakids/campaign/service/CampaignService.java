@@ -57,9 +57,9 @@ public class CampaignService {
         validateDates(request.startDate(), request.endDate());
 
         Campaign campaign = Campaign.builder()
-                .title(request.title())
-                .description(request.description())
-                .targetAudience(request.targetAudience())
+                .title(request.title().trim())
+                .description(trimToNull(request.description()))
+                .targetAudience(trimToNull(request.targetAudience()))
                 .startDate(request.startDate())
                 .endDate(request.endDate())
                 .active(true)
@@ -76,9 +76,9 @@ public class CampaignService {
         Campaign campaign = campaignRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Campaign not found"));
 
-        campaign.setTitle(request.title());
-        campaign.setDescription(request.description());
-        campaign.setTargetAudience(request.targetAudience());
+        campaign.setTitle(request.title().trim());
+        campaign.setDescription(trimToNull(request.description()));
+        campaign.setTargetAudience(trimToNull(request.targetAudience()));
         campaign.setStartDate(request.startDate());
         campaign.setEndDate(request.endDate());
 
@@ -108,5 +108,11 @@ public class CampaignService {
         if (endDate.isBefore(startDate)) {
             throw new BusinessException("End date cannot be before start date");
         }
+    }
+
+    private String trimToNull(String value) {
+        if (value == null) return null;
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 }

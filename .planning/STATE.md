@@ -101,3 +101,9 @@ Aguardar novo `CONTINUAR` para iniciar a Fase 2 — frontend Angular/Ionic.
 - Contratos receberam limites de tamanho, rejeição de campos desconhecidos e teto de paginação.
 - 38 testes backend passaram.
 - Próxima ação: novo `CONTINUAR` para Fase 5 — Services e domínio.
+
+## Resultado da Fase 5
+
+- Regras de propriedade e transação revisadas; data de dose contra nascimento e normalização textual reforçadas.
+- 38 testes backend passaram.
+- Próxima ação: novo `CONTINUAR` para Fase 6 — Repositories e constraints.
