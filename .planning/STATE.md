@@ -113,3 +113,10 @@ Aguardar novo `CONTINUAR` para iniciar a Fase 2 — frontend Angular/Ionic.
 - V8 adicionou constraints defensivas e os limites DTO/SQL foram alinhados.
 - Migrations V1–V8 e testes backend passaram.
 - Próxima ação: novo `CONTINUAR` para Fase 7 — Menor privilégio e RLS.
+
+## Resultado da Fase 7
+
+- V9 prepara roles sem privilégio e policies RLS com contexto local.
+- Suíte backend e migrations V1–V9 passaram.
+- Fase REPROVADA: datasource atual ainda usa `vacina_user` superuser/BYPASSRLS e o Spring ainda não define `app.current_user_id`.
+- Próxima ação: corrigir este bloqueio antes de iniciar a Fase 8.
