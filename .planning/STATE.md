@@ -107,3 +107,9 @@ Aguardar novo `CONTINUAR` para iniciar a Fase 2 — frontend Angular/Ionic.
 - Regras de propriedade e transação revisadas; data de dose contra nascimento e normalização textual reforçadas.
 - 38 testes backend passaram.
 - Próxima ação: novo `CONTINUAR` para Fase 6 — Repositories e constraints.
+
+## Resultado da Fase 6
+
+- V8 adicionou constraints defensivas e os limites DTO/SQL foram alinhados.
+- Migrations V1–V8 e testes backend passaram.
+- Próxima ação: novo `CONTINUAR` para Fase 7 — Menor privilégio e RLS.

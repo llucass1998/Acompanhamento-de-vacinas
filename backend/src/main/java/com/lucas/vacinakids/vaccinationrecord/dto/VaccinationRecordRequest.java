@@ -16,5 +16,5 @@ public record VaccinationRecordRequest(
         
         @Size(max = 160, message = "Location must not exceed 160 characters") String location,
         @Size(max = 120, message = "Batch number must not exceed 120 characters") String batchNumber,
-        @Size(max = 1000, message = "Observations must not exceed 1000 characters") String observations
+        @Size(max = 500, message = "Observations must not exceed 500 characters") String observations
 ) {}
