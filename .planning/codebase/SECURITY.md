@@ -4,7 +4,7 @@
 |---|---|---|
 | Frontend | AuthGuard de UX; interpolação Angular; input password; logout visual | tokens em localStorage; Bearer para qualquer HTTP; sem refresh/revogação; sem CSP; contrato inválido |
 | Edge/Vercel | HTTPS e HSTS observados; SPA rewrite | sem CSP, Permissions-Policy, Referrer-Policy ou frame-ancestors; `Server: Vercel`; ACAO `*` |
-| Spring Security | stateless; BCrypt; JWT assinado; rota admin por role; anyRequest autenticado | Actuator/Swagger com matchers amplos; sem rate limit; CSRF global off; sem issuer/audience/type; usuário inativo pode manter access token |
+| Spring Security | stateless; BCrypt; JWT assinado; rota admin por role; anyRequest autenticado; CORS allowlist em mudança local testada | CORS não commitado/profile prod depende de env; Actuator/Swagger amplos; sem rate limit; CSRF global off; sem issuer/audience/type; usuário inativo pode manter access token |
 | Controllers/DTOs | `@Valid`; DTOs não aceitam owner/user/role; ProblemDetail sem stack | campos extras não são explicitamente rejeitados; limites incompletos; paginação/sort livres |
 | Services/domínio | transações; validação de propriedade da criança; duplicidade lógica | identidade é parâmetro; admin service sem método protegido; refresh concorrente; invariantes incompletas |
 | Repositories | parâmetros/derived queries; ChildRepository filtra user | repositories privados herdaram métodos amplos; agendas/records não incluem owner; sem defesa contra service incorreto |
@@ -27,4 +27,4 @@
 - Nenhum `.env` real foi encontrado no histórico; `.env.example` está versionado.
 - Existem senhas/chaves determinísticas de desenvolvimento e teste em YAML, Compose e scripts soltos.
 - O JAR final inclui todos os `application-*.yml`, inclusive profiles local/test.
-- Alterações concorrentes não commitadas passaram a fixar senha local e chave JWT em `application-local.yml`; não foram incorporadas por esta auditoria.
+- O commit concorrente `8e0fa55` versionou senha local e chave JWT; o build confirmou ambas dentro do JAR. F0-031 bloqueia deploy/push e exige rotação, remoção e avaliação do histórico.

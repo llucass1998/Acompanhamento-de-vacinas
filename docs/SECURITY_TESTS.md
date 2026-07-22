@@ -11,7 +11,9 @@
 | Frontend unit | ChromeHeadless | 2/2 PASSARAM |
 | Frontend build | `npm run build` | PASSOU com warnings |
 | Docker Compose | `docker compose config --quiet` | PASSOU |
-| Dockerfile backend | build pull/no-cache no estado final | NÃO EXECUTADO; daemon sem resposta |
+| Dockerfile backend | `docker build --pull --no-cache` no HEAD `8e0fa55` | PASSOU em 161,5 s; imagem 133.762.054 bytes |
+| Docker runtime isolado | API + PostgreSQL 16.14 sem portas host | `UP`, V1–V7, endpoint privado 401 |
+| Docker Compose | config/down/build/up/ps | PASSOU; sem serviço buildável, volume preservado, DB healthy |
 
 ## Testes positivos existentes
 
@@ -44,8 +46,10 @@
 
 - Frontend ignorado/curl sem token: API devolveu 401.
 - CORS ausente/curl sem Origin: autenticação continuou obrigatória (401), confirmando que CORS não é auth.
+- CORS concorrente: origem permitida recebeu 200/allow-origin, origem maliciosa 403 e request direto sem Origin continuou 401; mudança ainda não commitada.
 - Proxy ignorado/acesso direto ao backend local: autenticação continuou obrigatória; rate limit interno não existe.
 - Container: processo observado como root, portanto o cenário de redução de impacto falhou.
+- Imagem: JAR contém profile local padrão, JWT literal e senha literal; nenhum valor foi impresso e a tag temporária foi removida.
 - Repository sem owner versus RLS: não pode ser aprovado; RLS inexiste.
 
 ## Casos obrigatórios ainda ausentes

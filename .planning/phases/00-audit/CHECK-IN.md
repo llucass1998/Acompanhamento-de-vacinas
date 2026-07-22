@@ -1,6 +1,6 @@
 # CHECK-IN GSD DE SEGURANÇA — FASE 0
 
-Status: REPROVADA
+Status: APROVADA
 
 ## Objetivo da fase
 
@@ -14,7 +14,7 @@ Mapear integralmente o sistema, registrar arquitetura e riscos reais e estabelec
 - [x] Criar documentos GSD e documentação de segurança não vazia.
 - [x] Corrigir os 16 erros de lint sem desativar regras.
 - [x] Reexecutar frontend, backend e migrations em ambientes isolados.
-- [ ] Reexecutar build e runtime Docker no estado final.
+- [x] Reexecutar build e runtime Docker no estado final.
 
 ## Controles implementados
 
@@ -32,6 +32,9 @@ Não aplicável como implementação de segurança; todas as onze camadas foram 
 - Backend `clean verify`: PASSOU, 38/38.
 - Flyway V1–V7 em banco vazio: PASSARAM.
 - Compose config: PASSOU.
+- Build Docker sem cache: PASSOU.
+- Smoke Docker: API `UP`, V1–V7 e endpoint privado 401.
+- Ciclo Compose down/build/up/ps: PASSOU.
 
 ## Testes negativos
 
@@ -39,20 +42,21 @@ Não aplicável como implementação de segurança; todas as onze camadas foram 
 - USER em endpoint ADMIN: esperado 403; obtido 403; rota/método bloquearam.
 - Criança de outro usuário: esperado bloqueio; obtido 404; service/repository bloquearam.
 - Role arbitrária, email case-variant e nascimento futuro direto no banco: bloqueio esperado, mas entradas aceitas; constraints ausentes.
-- Runtime container não root: esperado UID não zero; obtido anteriormente `uid=0`; hardening ausente.
+- Runtime container não root: esperado UID não zero; obtido `uid=0`; hardening ausente.
+- Segredos fora da imagem: esperado nenhum literal; JAR continha JWT e senha literais; F0-031 aberto.
 
 ## Testes de regressão
 
 - Backend: PASSOU.
 - Frontend: PASSOU.
 - PostgreSQL: PASSOU.
-- Docker: FALHOU — daemon indisponível para revalidação final.
+- Docker: PASSOU no build/smoke; testes de hardening falharam e estão registrados como vulnerabilidades.
 
 ## Build
 
 - Backend: PASSOU.
 - Frontend: PASSOU.
-- Docker: FALHOU — não executado porque o daemon não respondeu.
+- Docker: PASSOU.
 
 ## Banco
 
@@ -67,7 +71,8 @@ Não aplicável como implementação de segurança; todas as onze camadas foram 
 - CRÍTICA — dependências dev npm — 22 achados, um crítico — aberta, F0-003.
 - ALTA — tokens web em localStorage — aberta, F0-004.
 - ALTA — banco sem RLS, container root, DB público e CI ausente — abertas.
-- Registro completo: `.planning/codebase/CONCERNS.md`, F0-001–F0-030.
+- CRÍTICA — profile local, JWT e senha literais dentro do JAR — aberta e bloqueia deploy/imagem, F0-031.
+- Registro completo: `.planning/codebase/CONCERNS.md`, F0-001–F0-031.
 
 ## Evidências
 
@@ -75,13 +80,18 @@ Não aplicável como implementação de segurança; todas as onze camadas foram 
 - `.\mvnw.cmd -ntp clean verify`: 38 testes e `BUILD SUCCESS`.
 - Flyway: 7 migrations aplicadas, versão final 7 em PostgreSQL 18.4 descartável.
 - HTTP 401/403/404, constraints diretas, UID do container e headers registrados em `VERIFICATION.md`.
-- `docker compose config --quiet`: sucesso; `docker version`: timeout.
+- `docker compose config/down/build/up/ps`: sucesso; banco restaurado healthy, sem remover volume.
+- `docker build --pull --no-cache` no HEAD `8e0fa55`: sucesso em 161,5 s; imagem de 133.762.054 bytes.
+- Smoke isolado: health `UP`, PostgreSQL 16.14, V1–V7 e HTTP 401.
+- CORS: origem permitida 200, origem maliciosa 403 e chamada sem Origin 401; implementação concorrente não commitada.
+- Probes: root, escrita, ausência de healthcheck/limites e presença booleana de segredos no JAR.
 - Logs citados estão sanitizados; nenhuma senha ou token real foi registrado na documentação.
 
 ## Commit
 
 ```text
-git commit -m "chore: restaura baseline da fase 0"
+git commit -m "chore: restaura lint apos mudanca concorrente"
+git commit -m "docs: aprova checkpoint docker da fase 0"
 ```
 
 ## Estado do GSD
@@ -94,4 +104,4 @@ git commit -m "chore: restaura baseline da fase 0"
 
 ## Próxima fase
 
-Fase 1 permanece bloqueada. Primeiro é necessário disponibilizar o daemon Docker e enviar `CONTINUAR` para concluir somente a verificação Docker da Fase 0.
+Fase 1 — modelo de ameaças. Não foi iniciada; aguarda novo `CONTINUAR`.

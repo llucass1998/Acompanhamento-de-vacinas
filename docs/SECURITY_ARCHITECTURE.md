@@ -39,6 +39,7 @@ Lacunas:
 - Usuário desativado não é rejeitado explicitamente pelo filtro JWT.
 - Refresh não possui família, reuse detection ou proteção comprovada contra corrida.
 - Não há rate limit.
+- Uma mudança CORS concorrente ainda não commitada passou em probes de origem permitida/maliciosa, mas o profile prod depende de `APP_CORS_ALLOWED_ORIGINS`; CORS continua não sendo autenticação.
 
 ## Autorização
 
@@ -75,6 +76,7 @@ Nenhum sink Angular explícito (`innerHTML`, `DomSanitizer`, `bypassSecurityTrus
 - Não há backend no Compose nem rede interna completa.
 - Não há CI/CD, Dependabot, CodeQL, secret scanner, image scanner ou SBOM.
 - `npm audit` encontrou 22 vulnerabilidades na árvore completa, uma crítica.
+- O commit concorrente `8e0fa55` versionou segredo JWT/credencial local e o build confirmou ambos no JAR; deploy/push está bloqueado por F0-031.
 
 ## Observabilidade e recuperação
 

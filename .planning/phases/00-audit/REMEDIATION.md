@@ -35,7 +35,7 @@ Se lint, testes, build, migrations ou Docker obrigatório falharem, a Fase 0 con
 - [x] T0.R1 — 16 violações corrigidas com `inject()`; nenhuma supressão adicionada.
 - [x] T0.R2 — `npm ci`, lint, 2 testes ChromeHeadless e build passaram em worktree isolado.
 - [x] T0.R3 — 38 testes backend, JAR e V1–V7 passaram em PostgreSQL 18.4 descartável.
-- [ ] T0.R4 — Compose config passou, mas build/runtime não foram executados porque o daemon Docker não respondeu.
+- [x] T0.R4 — Compose, build sem cache, runtime isolado, migrations, health e 401 foram revalidados; hardening ausente foi registrado.
 - [x] T0.R5 — estado, roadmap, checklist, testes, evidências e check-in atualizados.
 
-Resultado global: `REPROVADA` exclusivamente pelo gate Docker não revalidado. O PostgreSQL e o worktree temporários foram removidos após a coleta de evidências.
+Resultado global: `APROVADA` como auditoria. PostgreSQL, worktrees, containers, rede, tag e diretórios temporários foram removidos após a coleta de evidências. A aprovação não corrige nem aceita os achados de segurança.

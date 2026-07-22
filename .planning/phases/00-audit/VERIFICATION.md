@@ -6,7 +6,7 @@ Data: 2026-07-22, fuso America/Sao_Paulo.
 
 - Raiz: `C:\Acompanhamento-de-vacinas-main`.
 - Branch inicial/final: `master`.
-- HEAD inicial: `821e5ea`; HEAD final mapeado: `12fe3da`.
+- HEAD inicial: `821e5ea`; HEAD inicialmente mapeado: `12fe3da`; HEAD final revalidado: `8e0fa55` mais mudanças locais preservadas.
 - GSD: todos os comandos esperados `NOT_FOUND`; nenhuma instalação realizada.
 - Mudanças concorrentes foram preservadas e excluídas do commit documental.
 
@@ -171,3 +171,118 @@ docker version --format ...
 ### Novo gate
 
 `REPROVADO`: lint, testes, builds de aplicação e migrations estão verdes, mas a verificação Docker obrigatória continua pendente por indisponibilidade do daemon. Não iniciar a Fase 1.
+
+## Encerramento do gate Docker após novo CONTINUAR
+
+Data: 2026-07-22, fuso America/Sao_Paulo.
+
+O daemon voltou a responder com Docker client/server 29.5.3. O serviço Windows continuava marcado como parado, mas o engine estava funcional.
+
+### Build e metadados
+
+```text
+docker compose config --quiet
+docker build --pull --no-cache --tag vacinakids-backend:phase0-4e33b5b backend
+```
+
+- Compose config: PASSOU.
+- Build: PASSOU em 170,6 s.
+- Imagem: `sha256:c725d771b092efd18fd65fee01b3f17b2dac08d372c94d87cdb3895819f00dd9`, 133.760.914 bytes.
+- `Config.User`: ausente, resultando em root padrão.
+- `HEALTHCHECK`: ausente.
+- `/app`: gravável.
+- `/app/.env`: ausente; camada final continha somente `app.jar`.
+
+### Smoke isolado
+
+Foram criados rede, PostgreSQL 16.14 e API temporários, sem portas publicadas no host.
+
+- API `/actuator/health`: `{"status":"UP"}`.
+- endpoint `/api/v1/children` sem token: HTTP 401.
+- Flyway: 7 migrations aplicadas, schema na versão 7.
+- processo: `uid=0(root)`.
+- runtime: `Privileged=false`, mas filesystem gravável, sem `CapDrop`, `SecurityOpt`, limite de PIDs, memória ou CPU.
+
+### Conteúdo sensível da imagem
+
+O JAR foi copiado de um container parado e lido como ZIP. Sem imprimir valores, foram confirmados:
+
+- profile `local` ativo por padrão;
+- chave JWT literal em `application-local.yml`;
+- senha de banco literal em `application-local.yml`.
+
+Achado criado: F0-031, crítico e bloqueador de deploy/push da imagem.
+
+### Ciclo Compose obrigatório
+
+```text
+docker compose down
+docker compose build --pull --no-cache
+docker compose up -d --wait
+docker compose ps
+```
+
+- `down`: PASSOU, sem `-v`.
+- `build`: PASSOU com aviso esperado `No services to build`, pois o Compose contém somente PostgreSQL por imagem.
+- `up`: PASSOU.
+- `ps`: `vacinakids_db` healthy em `0.0.0.0:5435`, confirmando também F0-006.
+- nenhum volume foi removido.
+
+### Limpeza
+
+Foram removidos os containers `vacinakids_phase0_app`, `vacinakids_phase0_db` temporário e `vacinakids_phase0_extract`, a rede `vacinakids_phase0_net`, a tag `vacinakids-backend:phase0-4e33b5b` e o diretório `.tmp-phase0-image`. O container Compose `vacinakids_db` permaneceu saudável.
+
+### Gate final da Fase 0
+
+`APROVADO` como auditoria: mapa, frontend, backend, migrations, Docker e documentação possuem evidência. Esta aprovação não significa que os controles de segurança passaram; 31 vulnerabilidades/dívidas permanecem abertas.
+
+## Revalidação após avanço concorrente do HEAD
+
+Antes do commit documental final, `master` avançou de `4e33b5b` para `8e0fa55` (`Fix register validations for password constraint`). O commit concorrente:
+
+- alterou cadastro frontend e reintroduziu três violações `prefer-inject`;
+- versionou `application.yml`, `application-local.yml`, `environment.ts` e `backend/start_front.ps1`;
+- colocou segredo JWT e credencial local no histórico Git.
+
+A remediação `inject()` foi reaplicada somente em `RegisterPage`, preservando as novas mensagens de validação, e commitada em `ad74751`. Alterações concorrentes ainda não commitadas em CORS e a exclusão do launcher não foram tocadas.
+
+### Frontend final
+
+Em worktree de `8e0fa55` com o `RegisterPage` exato do worktree principal:
+
+- `npm ci`: PASSOU, 1212 packages;
+- lint: PASSOU;
+- testes: 2/2 PASSARAM;
+- build: PASSOU com os warnings de imports já registrados.
+
+### Backend final
+
+Contra PostgreSQL 18.4 descartável e com allowlist CORS definida por env:
+
+- `clean verify`: PASSOU;
+- 38 testes, zero falha/erro;
+- V1–V7 aplicadas em schema vazio;
+- JAR produzido.
+
+### Docker final
+
+```text
+docker build --pull --no-cache --tag vacinakids-backend:phase0-8e0fa55 backend
+```
+
+- build: PASSOU em 161,5 s;
+- imagem: `sha256:8ca87b726726351884f4d552c12deadc0d3f7b84431ec90089668ab5a3fc0bda`, 133.762.054 bytes;
+- API: health `UP`;
+- Flyway/PostgreSQL 16.14: 7 migrations, versão 7;
+- request privado sem `Origin`: 401;
+- preflight de `http://localhost:4200`: 200 com origem exata e credentials;
+- preflight de `https://evil.example`: 403;
+- runtime: root, gravável, sem healthcheck/cap drop/no-new-privileges/limites;
+- JAR: profile local padrão, JWT literal e senha literal confirmados sem revelar valores;
+- `.env`: ausente.
+
+Containers, rede, diretório, tag backend e imagem auxiliar curl foram removidos. `vacinakids_db` do Compose permaneceu healthy.
+
+### Gate definitivo
+
+`APROVADO` como Fase 0 de auditoria no conteúdo final verificado. F0-031 agora inclui exposição no histórico Git e continua bloqueando deploy/push de imagem.

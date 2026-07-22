@@ -4,8 +4,8 @@ Cada fase termina em check-in, commit atômico e parada. A próxima fase exige `
 
 | Fase | Objetivo | Gate principal | Estado |
 |---|---|---|---|
-| 0 | Mapa do código e auditoria | mapa, migrations limpas, testes/build/lint verdes | `REPROVADA`: Docker final não revalidado; demais gates verdes |
-| 1 | Modelo de ameaças | casos de abuso, fronteiras e três controles para riscos críticos | `BLOQUEADA` |
+| 0 | Mapa do código e auditoria | mapa, migrations limpas, testes/build/lint verdes | `APROVADA`: auditoria completa, 31 achados abertos |
+| 1 | Modelo de ameaças | casos de abuso, fronteiras e três controles para riscos críticos | `AGUARDA CONTINUAR` |
 | 2 | Segurança Angular/Ionic | storage, interceptor, XSS e headers com testes | `NÃO INICIADA` |
 | 3 | Spring Security | default deny, JWT e segurança por método | `NÃO INICIADA` |
 | 4 | Controllers e DTOs | contratos mínimos, limites e rejeição negativa | `NÃO INICIADA` |
@@ -24,7 +24,7 @@ Cada fase termina em check-in, commit atômico e parada. A próxima fase exige `
 1. [x] Resolver os 16 erros de lint sem desativar regras.
 2. [x] Reexecutar `npm ci`, lint, testes e build em worktree isolado do `ng serve` concorrente.
 3. [x] Reexecutar `./mvnw clean verify` e migrations em banco vazio com overrides que isolam as configurações concorrentes.
-4. [ ] Confirmar build e runtime Docker novamente quando o daemon estiver disponível.
+4. [x] Confirmar build, runtime e ciclo Compose quando o daemon estiver disponível.
 5. [x] Atualizar `STATE.md` e o check-in com evidências novas.
 
 Commit documental esperado para a auditoria: `docs: mapeia arquitetura e seguranca atual`.

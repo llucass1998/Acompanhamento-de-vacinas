@@ -22,7 +22,7 @@ Estados: `ABERTA`, `MITIGAÇÃO PARCIAL` ou `BLOQUEIO DE BASELINE`. Nenhuma foi 
 | F0-016 | ALTA | edge frontend | sem CSP/frame-ancestors/referrer/permissions policy no Vercel | 2/9 | ABERTA |
 | F0-017 | ALTA | constraints | DB aceita role arbitrária, email com case duplicado e nascimento futuro | 6 | ABERTA |
 | F0-018 | MÉDIA | JWT | sem issuer, audience, tipo ou jti; chave local default é inadequada | 3/8 | ABERTA |
-| F0-019 | MÉDIA | CORS | properties existem, mas não há `CorsConfiguration`/`http.cors`; preflight recebeu 401 | 3 | ABERTA |
+| F0-019 | MÉDIA | CORS | mitigação não commitada adiciona allowlist e passou nos probes 200/403, mas profile prod depende de variável obrigatória e o controle pode desaparecer | 3 | MITIGAÇÃO PARCIAL |
 | F0-020 | MÉDIA | Actuator | matcher libera `/actuator/**`; habilitação futura torna endpoints públicos automaticamente | 3/9 | ABERTA |
 | F0-021 | MÉDIA | Swagger | UI público em produção e JSON retorna 500; duas configs OpenAPI coexistem | 3/9 | ABERTA |
 | F0-022 | MÉDIA | contratos | strings de vacinação sem `@Size`, extras não rejeitados, Pageable/sort sem limite | 4 | ABERTA |
@@ -34,5 +34,6 @@ Estados: `ABERTA`, `MITIGAÇÃO PARCIAL` ou `BLOQUEIO DE BASELINE`. Nenhuma foi 
 | F0-028 | BAIXA | logs | tentativas 401 são registradas em ERROR, facilitando ruído e custo operacional | 10 | ABERTA |
 | F0-029 | BAIXA | Docker build | base por tag flutuante, sem `.dockerignore`, `package -DskipTests`, sem healthcheck backend | 9/11 | ABERTA |
 | F0-030 | MELHORIA | documentação | README e contrato anterior não refletem integração atual nem estado de segurança | 0+ | ABERTA |
+| F0-031 | CRÍTICA | Git/profiles/Docker image | commit concorrente `8e0fa55` versionou segredo JWT/credencial; `application.yml` ativa local por padrão e o JAR os contém. Exige remoção, rotação e análise do histórico | 3/9/11 | ABERTA — BLOQUEIA DEPLOY/IMAGEM |
 
-Prioridade imediata: restaurar baseline verde; impedir exfiltração/armazenamento inseguro de tokens; tornar banco privado e sem superuser; estabelecer default deny por rota/método; depois RLS/constraints e pipeline.
+Prioridade imediata: remover/rotacionar o material de F0-031 e avaliar o histórico antes de qualquer deploy; impedir exfiltração/armazenamento inseguro de tokens; tornar banco privado e sem superuser; estabelecer default deny por rota/método; depois RLS/constraints e pipeline.

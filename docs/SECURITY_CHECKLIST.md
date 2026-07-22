@@ -24,13 +24,13 @@ Legenda: `ATENDE`, `PARCIAL`, `NÃO ATENDE`, `NÃO TESTADO`.
 | Runtime DB não é owner | NÃO ATENDE | é owner de todas as tabelas |
 | Runtime DB não possui BYPASSRLS | NÃO ATENDE | possui |
 | Dados privados têm RLS | NÃO ATENDE | zero policies |
-| CORS não substitui auth | ATENDE conceitualmente | 401 ocorre sem Origin; CORS efetivo está ausente |
+| CORS não substitui auth | PARCIAL | mudança não commitada: origem permitida 200, maliciosa 403 e sem Origin 401; prod depende de env |
 | AuthGuard não substitui autorização | PARCIAL | API retorna 401; faltam testes frontend/backend coordenados |
 | Angular não substitui Bean Validation | PARCIAL | Bean Validation existe, cobertura incompleta |
 | Domínio não substitui constraints | PARCIAL | campanha tem ambas; outras regras não |
 | Container não root | NÃO ATENDE | uid 0 |
 | PostgreSQL não está público | NÃO ATENDE | `0.0.0.0:5435` |
-| Segredos não entram no Git/imagem | PARCIAL | sem `.env` real; defaults/chaves locais e profiles no JAR |
+| Segredos não entram no Git/imagem | NÃO ATENDE | commit `8e0fa55` e JAR contêm chave JWT/senha literais; valores não foram exibidos |
 | Mudanças de segurança têm testes negativos | NÃO ATENDE | suíte de defesa em profundidade ausente |
 | CSP aplicada | NÃO ATENDE | header ausente no edge |
 | CI possui scanners e gates | NÃO ATENDE | `.github` ausente |
@@ -45,6 +45,7 @@ Legenda: `ATENDE`, `PARCIAL`, `NÃO ATENDE`, `NÃO TESTADO`.
 - Frontend testes: 2 verdes, cobertura insuficiente.
 - Frontend build: verde com warnings.
 - Docker Compose config: verde.
-- Docker build/runtime: evidência inicial mostrou build verde e processo root, mas a imagem do estado final não pôde ser revalidada porque o daemon não respondeu.
+- Docker build/runtime: build sem cache, API `UP`, V1–V7 e 401 passaram; hardening falhou (root, escrita, sem healthcheck/limites/cap drop/no-new-privileges).
+- Ciclo Compose: config/down/build/up/ps passou; volume preservado e DB voltou saudável.
 
-Status da fase: `REPROVADA` pelo gate Docker pendente. Não iniciar Fase 1.
+Status da fase: `APROVADA` como auditoria completa. Não iniciar Fase 1 sem `CONTINUAR`.
