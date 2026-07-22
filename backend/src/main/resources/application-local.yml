@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB:vacina_kids}
-    username: ${POSTGRES_USER:vacina_user}
-    password: ${POSTGRES_PASSWORD:senha_local}
+    url: jdbc:postgresql://localhost:5435/vacina_kids
+    username: vacina_user
+    password: senha_local
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -17,8 +17,14 @@ spring:
 
   flyway:
     enabled: true
+    url: jdbc:postgresql://localhost:5435/vacina_kids
+    user: vacina_user
+    password: senha_local
     locations: classpath:db/migration
     baseline-on-migrate: true
+
+server:
+  port: 8081
 
 management:
   endpoints:
@@ -31,7 +37,7 @@ management:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:chave_segura}
+    secret: a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7a8b9c0d1e2f3
     access-expiration-minutes: ${JWT_ACCESS_EXPIRATION_MINUTES:15}
     refresh-expiration-days: ${JWT_REFRESH_EXPIRATION_DAYS:7}
   cors:

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
@@ -13,10 +13,6 @@ import { AuthService } from '../../../services/auth/auth.service';
   imports: [IonicModule, CommonModule, FormsModule, RouterModule]
 })
 export class RegisterPage {
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
-  private readonly toastController = inject(ToastController);
-
   userData = {
     name: '',
     email: '',
@@ -26,6 +22,12 @@ export class RegisterPage {
   
   isLoading = false;
   errorMessage = '';
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastController: ToastController
+  ) { }
 
   async register() {
     if (!this.userData.name || !this.userData.email || !this.userData.password) {
@@ -64,7 +66,7 @@ export class RegisterPage {
         if (err.status === 409) {
           this.errorMessage = 'Este e-mail já está cadastrado.';
         } else if (err.status === 400) {
-          this.errorMessage = 'Dados inválidos. Verifique os campos.';
+          this.errorMessage = 'A senha requer: 8 caracteres, 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial (@, #, $...).';
         } else {
           this.errorMessage = 'Erro ao realizar cadastro. Tente novamente.';
         }

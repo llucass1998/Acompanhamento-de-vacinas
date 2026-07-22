@@ -2,5 +2,11 @@ spring:
   profiles:
     active: local
 
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5435}/${POSTGRES_DB:vacina_kids}
+    username: ${POSTGRES_USER:vacina_user}
+    password: ${POSTGRES_PASSWORD:senha_local}
+    driver-class-name: org.postgresql.Driver
+
   application:
     name: vacinakids
