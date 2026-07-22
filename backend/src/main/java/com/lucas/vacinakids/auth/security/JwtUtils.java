@@ -34,6 +34,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .subject(userPrincipal.getId().toString())
                 .claim("email", userPrincipal.getUsername())
+                .claim("typ", "access")
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + (long) jwtAccessExpirationMinutes * 60 * 1000))
                 .signWith(getSigningKey())
@@ -60,8 +61,11 @@ public class JwtUtils {
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(authToken);
-            return true;
+            Claims claims = Jwts.parser().verifyWith(getSigningKey()).build()
+                    .parseSignedClaims(authToken).getPayload();
+            return "access".equals(claims.get("typ", String.class))
+                    && claims.getSubject() != null
+                    && claims.get("email", String.class) != null;
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {

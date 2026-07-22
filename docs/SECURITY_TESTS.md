@@ -88,3 +88,10 @@ Uma suíte específica de defesa entre camadas será criada somente na Fase 12, 
 - `npm run build`: PASSOU.
 - Tokens não persistidos em storage web: PASSOU por inspeção.
 - Interceptor não envia bearer a URL externa: PASSOU por inspeção.
+
+## Fase 3 — Spring Security
+
+- Backend `./mvnw.cmd -ntp test`: 38 PASSARAM.
+- Access JWT sem `typ=access`: rejeitado.
+- Actuator público: limitado a health.
+- Swagger/OpenAPI: não liberados pela cadeia padrão.

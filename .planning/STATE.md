@@ -88,3 +88,10 @@ Aguardar novo `CONTINUAR` para iniciar a Fase 2 — frontend Angular/Ionic.
 - Tokens web passaram a memória; interceptor usa allowlist exata; CSP e políticas de documento aplicadas.
 - Lint, 2 testes Karma e build frontend passaram.
 - Próxima ação: novo `CONTINUAR` para Fase 3 — Spring Security.
+
+## Resultado da Fase 3
+
+- Default deny preservado; Actuator limitado a health; Swagger removido da lista pública.
+- Access JWT exige `typ=access`, subject e email após assinatura/expiração válidas.
+- Backend: 38 testes passaram.
+- Próxima ação: novo `CONTINUAR` para Fase 4 — Controllers e DTOs.
