@@ -25,6 +25,26 @@ public class Vaccine {
     @Column(nullable = false)
     private boolean active = true;
 
+    // Novos campos
+    @Column(unique = true, length = 100)
+    private String code;
+    
+    @Column(name = "display_name", length = 255)
+    private String displayName;
+    
+    @Column(name = "prevented_diseases", columnDefinition = "TEXT")
+    private String preventedDiseases;
+    
+    @Column(nullable = false)
+    private boolean official = false;
+    
+    @Column(name = "source_id")
+    private UUID sourceId;
+
+    @Version
+    @Column(name = "version_number", nullable = false)
+    private Long versionNumber = 0L;
+
     @OneToMany(mappedBy = "vaccine", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VaccineDose> doses = new ArrayList<>();
 
@@ -60,6 +80,24 @@ public class Vaccine {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
+
+    public String getDisplayName() { return displayName; }
+    public void setDisplayName(String displayName) { this.displayName = displayName; }
+
+    public String getPreventedDiseases() { return preventedDiseases; }
+    public void setPreventedDiseases(String preventedDiseases) { this.preventedDiseases = preventedDiseases; }
+
+    public boolean isOfficial() { return official; }
+    public void setOfficial(boolean official) { this.official = official; }
+
+    public UUID getSourceId() { return sourceId; }
+    public void setSourceId(UUID sourceId) { this.sourceId = sourceId; }
+
+    public Long getVersionNumber() { return versionNumber; }
+    public void setVersionNumber(Long versionNumber) { this.versionNumber = versionNumber; }
+
     public List<VaccineDose> getDoses() { return doses; }
     public void setDoses(List<VaccineDose> doses) { this.doses = doses; }
 
@@ -73,6 +111,7 @@ public class Vaccine {
         doses.add(dose);
         dose.setVaccine(this);
     }
+
 
     public static class Builder {
         private UUID id;
