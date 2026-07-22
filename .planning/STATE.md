@@ -82,3 +82,9 @@ Aguardar. Somente um novo `CONTINUAR` autoriza iniciar a discussão e o plano da
 ## Próxima ação autorizada
 
 Aguardar novo `CONTINUAR` para iniciar a Fase 2 — frontend Angular/Ionic.
+
+## Resultado da Fase 2
+
+- Tokens web passaram a memória; interceptor usa allowlist exata; CSP e políticas de documento aplicadas.
+- Lint, 2 testes Karma e build frontend passaram.
+- Próxima ação: novo `CONTINUAR` para Fase 3 — Spring Security.

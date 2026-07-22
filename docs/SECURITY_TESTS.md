@@ -80,3 +80,11 @@ Uma suíte específica de defesa entre camadas será criada somente na Fase 12, 
 - Discussão: `.planning/phases/01-threat-model/DISCUSSION.md`.
 - Plano: `.planning/phases/01-threat-model/PLAN.md`.
 - Resultado: fronteiras e casos de abuso registrados; testes de ataque permanecem pendentes nas fases de implementação.
+
+## Fase 2 — frontend
+
+- `npm run lint`: PASSOU.
+- `npm test -- --watch=false --browsers=ChromeHeadless`: 2 PASSARAM.
+- `npm run build`: PASSOU.
+- Tokens não persistidos em storage web: PASSOU por inspeção.
+- Interceptor não envia bearer a URL externa: PASSOU por inspeção.

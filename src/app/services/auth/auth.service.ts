@@ -13,28 +13,21 @@ export class AuthService {
   
   private currentUserSubject = new BehaviorSubject<UserResponse | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
+  private accessToken: string | null = null;
+  private refreshToken: string | null = null;
 
-  constructor() {
-    this.loadUserFromStorage();
-  }
-
-  private loadUserFromStorage(): void {
-    const userJson = localStorage.getItem('user');
-    if (userJson) {
-      this.currentUserSubject.next(JSON.parse(userJson));
-    }
-  }
+  constructor() {}
 
   public get currentUserValue(): UserResponse | null {
     return this.currentUserSubject.value;
   }
 
   public get isAuthenticated(): boolean {
-    return !!localStorage.getItem('access_token');
+    return !!this.accessToken;
   }
 
   public getAccessToken(): string | null {
-    return localStorage.getItem('access_token');
+    return this.accessToken;
   }
 
   public login(credentials: any): Observable<JwtResponse> {
@@ -48,16 +41,14 @@ export class AuthService {
   }
 
   private setSession(authResult: JwtResponse): void {
-    localStorage.setItem('access_token', authResult.accessToken);
-    localStorage.setItem('refresh_token', authResult.refreshToken);
-    localStorage.setItem('user', JSON.stringify(authResult.user));
+    this.accessToken = authResult.accessToken;
+    this.refreshToken = authResult.refreshToken;
     this.currentUserSubject.next(authResult.user);
   }
 
   public logout(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
+    this.accessToken = null;
+    this.refreshToken = null;
     
     // Clean up local vacina service state to prevent data leak
     localStorage.removeItem('vacina_kids_crianca_selecionada');
