@@ -1,5 +1,6 @@
 package com.lucas.vacinakids.auth.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lucas.vacinakids.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,18 +11,25 @@ import java.util.List;
 import java.util.UUID;
 
 public class UserDetailsImpl implements UserDetails {
-    private final UUID id;
-    private final String email;
-    private final String password;
-    private final Collection<? extends GrantedAuthority> authorities;
-    private final boolean active;
 
-    public UserDetailsImpl(UUID id, String email, String password, Collection<? extends GrantedAuthority> authorities, boolean active) {
+    private UUID id;
+    private String name;
+    private String email;
+    @JsonIgnore
+    private String password;
+    private Collection<? extends GrantedAuthority> authorities;
+    private boolean active;
+    private boolean mustChangePassword;
+
+    public UserDetailsImpl(UUID id, String name, String email, String password, boolean active, boolean mustChangePassword,
+                           Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
+        this.name = name;
         this.email = email;
         this.password = password;
-        this.authorities = authorities;
         this.active = active;
+        this.mustChangePassword = mustChangePassword;
+        this.authorities = authorities;
     }
 
     public static UserDetailsImpl build(User user) {
@@ -29,15 +37,24 @@ public class UserDetailsImpl implements UserDetails {
 
         return new UserDetailsImpl(
                 user.getId(),
+                user.getName(),
                 user.getEmail(),
                 user.getPasswordHash(),
-                authorities,
-                user.isActive()
-        );
+                user.isActive(),
+                user.isMustChangePassword(),
+                authorities);
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+    
+    public boolean isMustChangePassword() {
+        return mustChangePassword;
     }
 
     @Override
