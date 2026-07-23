@@ -29,25 +29,25 @@
 
         <ion-card class="custom-card" style="background: var(--app-success-soft); border-color: rgba(21, 128, 61, 0.2)">
           <p style="color: var(--app-success); text-transform: uppercase; font-size: 12px; font-weight: 700; margin-top: 0">Tomadas</p>
-          <h3 style="color: var(--app-success); font-size: 28px; margin: 0">{{ resumo.tomadas }}</h3>
+          <h3 style="color: var(--app-success); font-size: 28px; margin: 0">{{ resumo.taken }}</h3>
         </ion-card>
 
         <ion-card class="custom-card" style="background: var(--app-warning-soft); border-color: rgba(183, 121, 31, 0.2)">
           <p style="color: var(--app-warning); text-transform: uppercase; font-size: 12px; font-weight: 700; margin-top: 0">Pendentes</p>
-          <h3 style="color: var(--app-warning); font-size: 28px; margin: 0">{{ resumo.pendentes }}</h3>
+          <h3 style="color: var(--app-warning); font-size: 28px; margin: 0">{{ resumo.pending }}</h3>
         </ion-card>
 
         <ion-card class="custom-card" style="background: var(--app-danger-soft); border-color: rgba(194, 65, 58, 0.2)">
           <p style="color: var(--app-danger); text-transform: uppercase; font-size: 12px; font-weight: 700; margin-top: 0">Atrasadas</p>
-          <h3 style="color: var(--app-danger); font-size: 28px; margin: 0">{{ resumo.atrasadas }}</h3>
+          <h3 style="color: var(--app-danger); font-size: 28px; margin: 0">{{ resumo.overdue }}</h3>
         </ion-card>
       </div>
 
-      <ion-card class="custom-card" *ngIf="resumo && resumo.atrasadas > 0" style="margin-top: var(--space-4); background: var(--app-danger-soft); border-color: rgba(194, 65, 58, 0.2)">
+      <ion-card class="custom-card" *ngIf="resumo && resumo.overdue > 0" style="margin-top: var(--space-4); background: var(--app-danger-soft); border-color: rgba(194, 65, 58, 0.2)">
         <div style="display: flex; align-items: flex-start; gap: var(--space-3)">
           <ion-icon name="alert-circle" style="font-size: 24px; color: var(--app-danger); margin-top: 2px"></ion-icon>
           <div>
-            <h3 style="color: var(--app-danger); margin: 0 0 var(--space-1) 0; font-size: 18px">Atenção: {{ resumo.atrasadas }} vacina(s) atrasada(s)</h3>
+            <h3 style="color: var(--app-danger); margin: 0 0 var(--space-1) 0; font-size: 18px">Atenção: {{ resumo.overdue }} vacina(s) atrasada(s)</h3>
             <p style="color: var(--app-danger); margin: 0">Existe vacina com data prevista ultrapassada e sem registro de aplicação.</p>
           </div>
         </div>
@@ -62,9 +62,9 @@
 
       <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-6); overflow-x: auto; padding-bottom: var(--space-2)">
         <ion-button [color]="filtroStatus === 'todas' ? 'primary' : 'light'" [fill]="filtroStatus === 'todas' ? 'solid' : 'outline'" (click)="filtroStatus = 'todas'" style="--border-radius: 999px">Todas</ion-button>
-        <ion-button [color]="filtroStatus === 'ATRASADA' ? 'danger' : 'light'" [fill]="filtroStatus === 'ATRASADA' ? 'solid' : 'outline'" (click)="filtroStatus = 'ATRASADA'" style="--border-radius: 999px">Atrasadas</ion-button>
-        <ion-button [color]="filtroStatus === 'PENDENTE' ? 'warning' : 'light'" [fill]="filtroStatus === 'PENDENTE' ? 'solid' : 'outline'" (click)="filtroStatus = 'PENDENTE'" style="--border-radius: 999px">Pendentes</ion-button>
-        <ion-button [color]="filtroStatus === 'TOMADA' ? 'success' : 'light'" [fill]="filtroStatus === 'TOMADA' ? 'solid' : 'outline'" (click)="filtroStatus = 'TOMADA'" style="--border-radius: 999px">Tomadas</ion-button>
+        <ion-button [color]="filtroStatus === 'OVERDUE' ? 'danger' : 'light'" [fill]="filtroStatus === 'OVERDUE' ? 'solid' : 'outline'" (click)="filtroStatus = 'OVERDUE'" style="--border-radius: 999px">Atrasadas</ion-button>
+        <ion-button [color]="filtroStatus === 'PENDING' ? 'warning' : 'light'" [fill]="filtroStatus === 'PENDING' ? 'solid' : 'outline'" (click)="filtroStatus = 'PENDING'" style="--border-radius: 999px">Pendentes</ion-button>
+        <ion-button [color]="filtroStatus === 'TAKEN' ? 'success' : 'light'" [fill]="filtroStatus === 'TAKEN' ? 'solid' : 'outline'" (click)="filtroStatus = 'TAKEN'" style="--border-radius: 999px">Tomadas</ion-button>
       </div>
 
       <div class="dashboard-grid">
@@ -72,7 +72,7 @@
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4)">
             <div>
               <h3 style="margin: 0 0 var(--space-1) 0; font-size: 18px">{{ vacina.vaccineName }}</h3>
-              <p class="text-secondary" style="margin: 0">{{ vacina.doseName }}</p>
+              <p class="text-secondary" style="margin: 0">{{ vacina.vaccineDose.doseName }}</p>
             </div>
             <app-status-chip [status]="mapStatusToChip(vacina.status)" [label]="vacina.status"></app-status-chip>
           </div>
@@ -80,18 +80,15 @@
           <div style="display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-4); padding-top: var(--space-3); border-top: 1px solid var(--app-border)">
             <div style="display: flex; justify-content: space-between; font-size: 14px">
               <span class="text-secondary">Data prevista</span>
-              <span class="font-bold">{{ vacina.dueDate | date:'dd/MM/yyyy' }}</span>
+              <span class="font-bold">{{ vacina.expectedDate | date:'dd/MM/yyyy' }}</span>
             </div>
-            <div *ngIf="vacina.appliedDate" style="display: flex; justify-content: space-between; font-size: 14px">
-              <span class="text-secondary">Aplicada em</span>
-              <span class="font-bold">{{ vacina.appliedDate | date:'dd/MM/yyyy' }}</span>
-            </div>
+
           </div>
 
           <ion-button
             expand="block"
             class="main-button"
-            *ngIf="vacina.status !== 'TOMADA'"
+            *ngIf="vacina.status !== 'TAKEN'"
             (click)="marcarComoTomada(vacina)"
             style="margin-top: 0"
           >

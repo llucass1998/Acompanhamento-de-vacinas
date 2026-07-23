@@ -1,46 +1,60 @@
-export type StatusVacina = 'TOMADA' | 'PENDENTE' | 'ATRASADA';
+export type StatusVacina = 'TAKEN' | 'PENDENTE' | 'OVERDUE' | 'PENDING';
 
 export interface Vaccine {
   id: string;
   name: string;
   description: string;
-  recommendedAgeMonths: number;
+  active: boolean;
+  code: string;
+  displayName: string;
+  official: boolean;
 }
 
-export interface VaccineDose {
+export interface VaccineDoseResponse {
   id: string;
   vaccineId: string;
   doseName: string;
   recommendedAgeMonths: number;
+  description: string;
+  code: string;
 }
 
-export interface VaccinationSchedule {
+export interface VaccinationScheduleResponse {
   id: string;
   childId: string;
-  vaccineId: string;
+  vaccineDose: VaccineDoseResponse;
   vaccineName: string;
-  doseId: string;
-  doseName: string;
-  dueDate: string; // YYYY-MM-DD
+  expectedDate: string; // YYYY-MM-DD
   status: StatusVacina;
-  appliedDate?: string;
 }
 
-export interface VaccinationRecord {
+export interface VaccinationRecordResponse {
   id: string;
   childId: string;
-  vaccineId: string;
+  doseId: string;
+  vaccineName: string;
+  doseName: string;
+  appliedDate: string;
+  location?: string;
+  batchNumber?: string;
+  observations?: string;
+  proofUrl?: string;
+}
+
+export interface VaccinationRecordRequest {
   doseId: string;
   appliedDate: string;
   location?: string;
-  notes?: string;
+  batchNumber?: string;
+  observations?: string;
 }
 
-export interface ResumoVacinal {
+export interface VaccinationSummaryResponse {
   total: number;
-  tomadas: number;
-  pendentes: number;
-  atrasadas: number;
+  taken: number;
+  pending: number;
+  overdue: number;
+  completionPercentage: number;
 }
 
 export interface Campanha {

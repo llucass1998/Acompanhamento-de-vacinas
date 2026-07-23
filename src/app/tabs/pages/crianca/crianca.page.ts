@@ -26,7 +26,7 @@ import {
 } from 'ionicons/icons';
 
 import { Crianca, ChildCreateRequest } from '../../../models/crianca.model';
-import { ResumoVacinal } from '../../../models/vacina.model';
+import { VaccinationSummaryResponse } from '../../../models/vacina.model';
 import { ChildService } from '../../../services/child/child.service';
 import { VaccinationRecordService } from '../../../services/vaccination-record/vaccination-record.service';
 import { catchError, of } from 'rxjs';
@@ -64,7 +64,7 @@ export class CriancaPage implements OnInit {
 
   criancas: Crianca[] = [];
   criancaSelecionadaId: string | null = null;
-  resumosVacinais: Record<string, ResumoVacinal> = {};
+  resumosVacinais: Record<string, VaccinationSummaryResponse> = {};
 
   isModalOpen = false;
   novaCrianca: ChildCreateRequest = {
@@ -106,7 +106,7 @@ export class CriancaPage implements OnInit {
       
       this.criancas.forEach(c => {
         this.recordService.getChildSummary(c.id).pipe(
-          catchError(() => of({ total: 0, tomadas: 0, pendentes: 0, atrasadas: 0 }))
+          catchError(() => of({ total: 0, taken: 0, pending: 0, overdue: 0, completionPercentage: 0 }))
         ).subscribe(summary => {
           this.resumosVacinais[c.id] = summary;
         });

@@ -22,7 +22,7 @@ import {
   waterOutline
 } from 'ionicons/icons';
 
-import { ResumoVacinal, VaccinationSchedule } from '../../../models/vacina.model';
+import { VaccinationSummaryResponse, VaccinationScheduleResponse } from '../../../models/vacina.model';
 import { ChildService } from '../../../services/child/child.service';
 import { VaccinationRecordService } from '../../../services/vaccination-record/vaccination-record.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
@@ -52,8 +52,8 @@ export class AcompanhamentoPage implements OnInit {
   private recordService = inject(VaccinationRecordService);
 
   criancaSelecionadaId: string | null = null;
-  vacinas: VaccinationSchedule[] = [];
-  resumo: ResumoVacinal = { total: 0, tomadas: 0, pendentes: 0, atrasadas: 0 };
+  vacinas: VaccinationScheduleResponse[] = [];
+  resumo: VaccinationSummaryResponse = { total: 0, taken: 0, pending: 0, overdue: 0, completionPercentage: 0 };
   
   filtroStatus: string = 'todas';
   termoBusca: string = '';
@@ -84,7 +84,7 @@ export class AcompanhamentoPage implements OnInit {
   carregarDados() {
     if (!this.criancaSelecionadaId) {
       this.vacinas = [];
-      this.resumo = { total: 0, tomadas: 0, pendentes: 0, atrasadas: 0 };
+      this.resumo = { total: 0, taken: 0, pending: 0, overdue: 0, completionPercentage: 0 };
       return;
     }
 
@@ -115,24 +115,24 @@ export class AcompanhamentoPage implements OnInit {
       filtradas = filtradas.filter(
         (v) =>
           v.vaccineName.toLowerCase().includes(termo) ||
-          v.doseName.toLowerCase().includes(termo)
+          v.vaccineDose.doseName.toLowerCase().includes(termo)
       );
     }
 
     return filtradas;
   }
 
-  marcarComoTomada(vacina: VaccinationSchedule) {
+  marcarComoTomada(vacina: VaccinationScheduleResponse) {
     if (!this.criancaSelecionadaId) return;
 
-    const recordPayload = {
+    const recordPayload: any = {
       childId: this.criancaSelecionadaId,
-      vaccineId: vacina.vaccineId,
-      doseId: vacina.doseId,
+      
+      doseId: vacina.vaccineDose.id,
       appliedDate: new Date().toISOString().split('T')[0]
     };
 
-    this.recordService.registerDose(recordPayload).subscribe({
+    this.recordService.registerDose(this.criancaSelecionadaId, recordPayload).subscribe({
       next: () => {
         this.carregarDados();
       },

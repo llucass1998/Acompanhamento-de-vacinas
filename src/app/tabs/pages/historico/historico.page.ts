@@ -11,7 +11,7 @@ import { documentTextOutline, timeOutline, checkmarkCircleOutline } from 'ionico
 
 import { VaccinationRecordService } from '../../../services/vaccination-record/vaccination-record.service';
 import { ChildService } from '../../../services/child/child.service';
-import { VaccinationSchedule } from '../../../models/vacina.model';
+import { VaccinationRecordResponse } from '../../../models/vacina.model';
 import { Crianca } from '../../../models/crianca.model';
 
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
@@ -36,7 +36,7 @@ export class HistoricoPage implements OnInit {
   private recordService = inject(VaccinationRecordService);
   private childService = inject(ChildService);
 
-  historico: VaccinationSchedule[] = [];
+  historico: VaccinationRecordResponse[] = [];
   criancas: Crianca[] = [];
   criancaSelecionadaId: string | null = null;
   filtroStatus: string = 'TODOS';
@@ -86,15 +86,15 @@ export class HistoricoPage implements OnInit {
     if (!this.criancaSelecionadaId) return;
 
     this.recordService.getChildRecords(this.criancaSelecionadaId).subscribe(response => {
-      let dados: VaccinationSchedule[] = response.content || [];
+      let dados: VaccinationRecordResponse[] = response || [];
       
       if (this.filtroStatus !== 'TODOS') {
-        dados = dados.filter((r: VaccinationSchedule) => r.status === this.filtroStatus);
+        dados = dados.filter((r: VaccinationRecordResponse) => 'TAKEN' === this.filtroStatus);
       }
       
-      this.historico = dados.sort((a: VaccinationSchedule, b: VaccinationSchedule) => {
-        const dataA = new Date(a.appliedDate || a.dueDate).getTime();
-        const dataB = new Date(b.appliedDate || b.dueDate).getTime();
+      this.historico = dados.sort((a: VaccinationRecordResponse, b: VaccinationRecordResponse) => {
+        const dataA = new Date(a.appliedDate || a.appliedDate).getTime();
+        const dataB = new Date(b.appliedDate || b.appliedDate).getTime();
         return dataB - dataA;
       });
     });

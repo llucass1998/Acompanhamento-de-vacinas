@@ -19,8 +19,8 @@
     <div *ngIf="criancaSelecionadaId">
       <div class="timeline" *ngIf="historico.length > 0">
         <div class="timeline-item" *ngFor="let registro of historico">
-          <div class="timeline-marker" [ngClass]="registro.status">
-            <ion-icon [name]="registro.status === 'TOMADA' ? 'checkmark-circle-outline' : 'time-outline'"></ion-icon>
+          <div class="timeline-marker" [ngClass]=>
+            <ion-icon [name]="true ? 'checkmark-circle-outline' : 'time-outline'"></ion-icon>
           </div>
           
           <div class="timeline-content">
@@ -28,8 +28,8 @@
               <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--app-text-primary)">
                 {{ registro.vaccineName }}
               </h3>
-              <span class="timeline-badge" [ngClass]="registro.status">
-                {{ registro.status }}
+              <span class="timeline-badge" [ngClass]=>
+                TOMADA
               </span>
             </div>
             
@@ -44,7 +44,7 @@
               </div>
               <div style="display: flex; flex-direction: column" *ngIf="!registro.appliedDate">
                 <span class="text-secondary" style="font-size: 11px; text-transform: uppercase; font-weight: 600">Prevista para</span>
-                <span style="font-size: 14px; color: var(--app-text-primary); font-weight: 500">{{ registro.dueDate | date:'dd/MM/yyyy' }}</span>
+                <span style="font-size: 14px; color: var(--app-text-primary); font-weight: 500">{{ registro.appliedDate | date:'dd/MM/yyyy' }}</span>
               </div>
             </div>
           </div>
