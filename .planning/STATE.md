@@ -122,3 +122,4 @@ Aguardar novo `CONTINUAR` para iniciar a Fase 2 — frontend Angular/Ionic.
 - Próxima ação: corrigir este bloqueio antes de iniciar a Fase 8.
 
 - `RlsUserContextAspect` adicionado para `SET LOCAL`, porém gate permanece vermelho porque a role efetiva de teste/local ainda não foi trocada para `vacina_app` sem bypass.
+- Smoke SQL A/B passou; gate de regressão com `vacina_app` permanece vermelho por fixtures sem contexto.

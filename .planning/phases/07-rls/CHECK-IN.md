@@ -15,6 +15,12 @@ Status: REPROVADA
 - Contexto transacional Spring: PENDENTE.
 - Aspecto transacional preparado em `RlsUserContextAspect`, mas não validado com role sem bypass.
 
+### Evidência adicional
+
+- Teste SQL A/B com `vacina_app`: usuário A viu 1 linha própria e 0 de B; usuário B viu 1 própria; sem contexto viu 0.
+- INSERT sem contexto foi bloqueado por RLS.
+- A suíte completa usando `vacina_app` ainda falha em fixtures que persistem diretamente sem contexto.
+
 ### Bloqueio
 
 Não é seguro declarar a fase aprovada enquanto o datasource de teste/local não usa uma role sem bypass e não há teste A/B com contexto isolado. A próxima ação deve configurar datasource/ownership externamente e adicionar esses testes, sem avançar para Fase 8.
