@@ -1,112 +1,127 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      <span class="toolbar-brand">
-        <img src="assets/logo-vacina.png" alt="" aria-hidden="true">
-        <span>Vacina Kids</span>
-      </span>
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-page-header title="Vacina Kids" subtitle="Acompanhamento familiar de vacinação infantil."></app-page-header>
 
 <ion-content>
   <div class="page-container">
-    <section class="hero-card">
-      <div>
-        <p class="hero-tag">Acompanhamento familiar</p>
-        <h1>Jornada vacinal infantil em um só lugar.</h1>
-        <p>
-          Selecione cada criança para visualizar histórico, vacinas previstas, pendências e campanhas importantes.
-        </p>
-      </div>
+    <div class="summary-grid" style="margin-bottom: var(--space-8)">
+      <ion-card class="custom-card" style="display: flex; align-items: center; justify-content: space-between">
+        <div>
+          <p class="text-secondary" style="text-transform: uppercase; font-size: 12px; font-weight: 700; margin-top: 0">Crianças</p>
+          <h3 style="font-size: 28px; margin: 0">{{ criancas.length }}</h3>
+        </div>
+        <ion-icon name="people-outline" style="font-size: 32px; color: var(--app-primary-soft)"></ion-icon>
+      </ion-card>
 
-      <div class="hero-kpis">
-        <div class="kpi-card">
-          <span>Crianças</span>
-          <strong>{{ criancas.length }}</strong>
+      <ion-card class="custom-card" style="display: flex; align-items: center; justify-content: space-between" *ngIf="criancaSelecionadaId">
+        <div>
+          <p class="text-secondary" style="text-transform: uppercase; font-size: 12px; font-weight: 700; margin-top: 0">Ativa</p>
+          <h3 style="font-size: 20px; margin: 0; margin-top: 8px">{{ criancas.length > 0 && criancaSelecionadaId ? (criancas[0]?.name) : '-' }}</h3>
         </div>
-        <div class="kpi-card">
-          <span>Selecionada</span>
-          <strong>{{ criancas.length > 0 && criancaSelecionadaId ? (criancas | keyvalue: undefined) : '-' }}</strong>
-        </div>
-      </div>
-    </section>
+        <ion-icon name="person-circle-outline" style="font-size: 32px; color: var(--app-primary)"></ion-icon>
+      </ion-card>
+    </div>
 
     <div class="section-row">
       <div>
         <h2 class="section-heading">Crianças cadastradas</h2>
-        <p class="section-caption">Cada perfil mantém uma situação vacinal própria.</p>
+        <p class="section-caption">Selecione um perfil para acompanhar a situação vacinal.</p>
       </div>
-      <ion-button size="small" (click)="setOpen(true)">
+      <ion-button class="main-button" style="margin-top: 0" (click)="setOpen(true)">
         <ion-icon slot="start" name="add-outline"></ion-icon>
-        Adicionar Criança
+        Adicionar
       </ion-button>
     </div>
 
     <div class="child-grid" *ngIf="criancas.length > 0">
-      <article
-        class="child-card"
-        *ngFor="let crianca of criancas"
-        [class.active-child]="criancaSelecionadaId === crianca.id"
-      >
-        <div class="child-top">
-          <div class="child-profile">
-            <div class="avatar">{{ crianca.name.charAt(0) }}</div>
-            <div>
-              <h3>{{ crianca.name }}</h3>
-              <p class="muted">{{ calcularIdade(crianca.birthDate) }}</p>
-            </div>
+      <ion-card 
+        *ngFor="let crianca of criancas" 
+        class="custom-card clickable" 
+        [ngClass]="{'selected-child': criancaSelecionadaId === crianca.id}"
+        (click)="selecionarCrianca(crianca.id)"
+        [style.border-color]="criancaSelecionadaId === crianca.id ? 'var(--app-primary)' : 'var(--app-border)'"
+        [style.box-shadow]="criancaSelecionadaId === crianca.id ? '0 0 0 4px var(--app-primary-soft)' : 'var(--shadow-sm)'">
+        
+        <div style="display: flex; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-4)">
+          <div style="width: 48px; height: 48px; border-radius: var(--radius-sm); background: var(--app-primary-soft); color: var(--app-primary); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800">
+            {{ crianca.name.charAt(0) }}
+          </div>
+          <div>
+            <h3 style="margin: 0 0 var(--space-1) 0; font-size: 18px">{{ crianca.name }}</h3>
+            <p class="text-secondary" style="margin: 0">{{ calcularIdade(crianca.birthDate) }}</p>
+          </div>
+          <div style="margin-left: auto" *ngIf="criancaSelecionadaId === crianca.id">
+            <ion-icon name="checkmark-circle-outline" style="color: var(--app-primary); font-size: 24px"></ion-icon>
           </div>
         </div>
 
-        <div class="mini-summary" *ngIf="resumosVacinais[crianca.id] as resumo">
-          <span><strong>{{ resumo.tomadas }}</strong> tomadas</span>
-          <span><strong>{{ resumo.pendentes }}</strong> pendentes</span>
-          <span><strong>{{ resumo.atrasadas }}</strong> atrasadas</span>
+        <div style="display: flex; gap: var(--space-2); margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--app-border)" *ngIf="resumosVacinais[crianca.id] as resumo">
+          <div style="flex: 1; padding: var(--space-2); background: var(--app-surface-secondary); border-radius: var(--radius-sm); text-align: center">
+            <strong style="display: block; font-size: 16px; color: var(--app-text-primary)">{{ resumo.tomadas }}</strong>
+            <span class="text-secondary" style="font-size: 11px; text-transform: uppercase">Tomadas</span>
+          </div>
+          <div style="flex: 1; padding: var(--space-2); background: var(--app-warning-soft); border-radius: var(--radius-sm); text-align: center">
+            <strong style="display: block; font-size: 16px; color: var(--app-warning)">{{ resumo.pendentes }}</strong>
+            <span style="font-size: 11px; color: var(--app-warning); text-transform: uppercase">Pendente</span>
+          </div>
+          <div style="flex: 1; padding: var(--space-2); background: var(--app-danger-soft); border-radius: var(--radius-sm); text-align: center">
+            <strong style="display: block; font-size: 16px; color: var(--app-danger)">{{ resumo.atrasadas }}</strong>
+            <span style="font-size: 11px; color: var(--app-danger); text-transform: uppercase">Atraso</span>
+          </div>
         </div>
-
-        <ion-button size="small" class="main-button compact-button" (click)="selecionarCrianca(crianca.id)">
-          {{ criancaSelecionadaId === crianca.id ? 'Acompanhando' : 'Acompanhar' }}
-        </ion-button>
-      </article>
+      </ion-card>
     </div>
 
-    <div *ngIf="criancas.length === 0" class="empty-state">
-      <ion-icon name="people-outline" size="large"></ion-icon>
-      <h3>Nenhuma criança cadastrada</h3>
-      <p>Adicione uma criança para começar o acompanhamento vacinal.</p>
-      <ion-button (click)="setOpen(true)">Cadastrar Agora</ion-button>
-    </div>
+    <app-empty-state 
+      *ngIf="criancas.length === 0" 
+      icon="people-outline" 
+      title="Nenhuma criança" 
+      message="Adicione uma criança para começar o acompanhamento vacinal."
+      actionLabel="Cadastrar Agora"
+      (actionClick)="setOpen(true)">
+    </app-empty-state>
 
-    <ion-modal [isOpen]="isModalOpen" (didDismiss)="setOpen(false)">
+    <!-- Modal de Cadastro -->
+    <ion-modal [isOpen]="isModalOpen" (didDismiss)="setOpen(false)" class="custom-modal">
       <ng-template>
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>Adicionar Criança</ion-title>
+        <ion-header class="ion-no-border">
+          <ion-toolbar style="--padding-start: var(--space-4); --padding-end: var(--space-2); --padding-top: var(--space-2)">
+            <ion-title style="font-weight: 700; padding: 0">Nova Criança</ion-title>
             <ion-buttons slot="end">
-              <ion-button (click)="setOpen(false)">Fechar</ion-button>
+              <ion-button color="medium" (click)="setOpen(false)">Fechar</ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
+        
         <ion-content class="ion-padding">
-          <ion-list>
-            <ion-item>
-              <ion-input label="Nome da Criança" labelPlacement="floating" [(ngModel)]="novaCrianca.name" required></ion-input>
+          <div style="margin-bottom: var(--space-6)">
+            <p class="text-secondary">Preencha os dados básicos para criar um perfil de acompanhamento.</p>
+          </div>
+
+          <form (ngSubmit)="salvarCrianca()" #form="ngForm">
+            <ion-item class="custom-input">
+              <ion-input label="Nome Completo" labelPlacement="stacked" [(ngModel)]="novaCrianca.name" name="name" required placeholder="Ex: Ana Clara"></ion-input>
             </ion-item>
-            <ion-item>
-              <ion-input type="date" label="Data de Nascimento" labelPlacement="floating" [(ngModel)]="novaCrianca.birthDate" required></ion-input>
+            
+            <ion-item class="custom-input">
+              <ion-input type="date" label="Data de Nascimento" labelPlacement="stacked" [(ngModel)]="novaCrianca.birthDate" name="birthDate" required></ion-input>
             </ion-item>
-            <ion-item>
-              <ion-select label="Gênero" labelPlacement="floating" [(ngModel)]="novaCrianca.gender">
-                <ion-select-option value="M">Masculino</ion-select-option>
-                <ion-select-option value="F">Feminino</ion-select-option>
-              </ion-select>
+            
+            <ion-item class="custom-input">
+              <ion-input label="Nome do Responsável" labelPlacement="stacked" [(ngModel)]="novaCrianca.responsibleName" name="responsibleName" required placeholder="Sua relação com a criança ou nome"></ion-input>
             </ion-item>
-            <ion-item>
-              <ion-textarea label="Observações (Alergias, etc.)" labelPlacement="floating" [(ngModel)]="novaCrianca.notes"></ion-textarea>
+            
+            <ion-item class="custom-input" style="align-items: flex-start">
+              <ion-textarea label="Observações (Alergias, etc.)" labelPlacement="stacked" [(ngModel)]="novaCrianca.notes" name="notes" rows="3" placeholder="Informações médicas importantes..."></ion-textarea>
             </ion-item>
-          </ion-list>
-          <ion-button expand="block" class="ion-margin-top" (click)="salvarCrianca()">Salvar</ion-button>
+
+            <ion-button 
+              type="submit" 
+              expand="block" 
+              class="main-button" 
+              style="margin-top: var(--space-6)"
+              [disabled]="!form.valid">
+              Salvar Perfil
+            </ion-button>
+          </form>
         </ion-content>
       </ng-template>
     </ion-modal>

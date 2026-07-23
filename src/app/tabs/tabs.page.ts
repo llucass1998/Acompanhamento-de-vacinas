@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   IonIcon,
   IonLabel,
@@ -26,7 +26,7 @@ import { AuthService } from '../services/auth/auth.service';
   selector: 'app-tabs',
   templateUrl: './tabs.page.html',
   standalone: true,
-  imports: [IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs, RouterLink, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton],
+  imports: [IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton],
 })
 export class TabsPage {
   private readonly authService = inject(AuthService);

@@ -1,76 +1,75 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      <span class="toolbar-brand">
-        <img src="assets/logo-vacina.png" alt="" aria-hidden="true">
-        <span>Histórico</span>
-      </span>
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-page-header title="Histórico" subtitle="Acompanhe todas as vacinas aplicadas."></app-page-header>
 
 <ion-content>
   <div class="page-container">
-    <div *ngIf="!criancaSelecionadaId" class="empty-state" style="margin-top: 2rem;">
-      <ion-icon name="people-outline" size="large"></ion-icon>
-      <h3>Selecione uma Criança</h3>
-      <p>Vá até a aba Crianças e selecione uma criança para ver o histórico vacinal.</p>
-      <ion-button routerLink="/tabs/crianca">Ir para Crianças</ion-button>
+    <div style="margin-bottom: var(--space-6)" *ngIf="criancas.length > 0">
+      <div style="display: flex; flex-direction: column; gap: var(--space-2)">
+        <label style="font-size: 14px; font-weight: 600; color: var(--app-text-primary)">Criança selecionada</label>
+        <select 
+          class="custom-select" 
+          [(ngModel)]="criancaSelecionadaId" 
+          (change)="onCriancaChange()"
+          style="padding: var(--space-3); border: 1px solid var(--app-border); border-radius: var(--radius-md); background: var(--app-surface); color: var(--app-text-primary); font-family: inherit; font-size: 16px;">
+          <option *ngFor="let crianca of criancas" [value]="crianca.id">{{ crianca.name }}</option>
+        </select>
+      </div>
     </div>
 
+    <!-- Timeline Wrapper -->
     <div *ngIf="criancaSelecionadaId">
-      <section class="hero-card">
-        <div>
-          <p class="hero-tag">Doses aplicadas</p>
-          <h1>Histórico Completo</h1>
-          <p>
-            Consulte todas as vacinas já registradas para esta criança.
-          </p>
-        </div>
-      </section>
-
       <div class="timeline" *ngIf="historico.length > 0">
         <div class="timeline-item" *ngFor="let registro of historico">
-          <div class="timeline-marker">
-            <ion-icon name="checkmark-circle"></ion-icon>
+          <div class="timeline-marker" [ngClass]="registro.status">
+            <ion-icon [name]="registro.status === 'TOMADA' ? 'checkmark-circle-outline' : 'time-outline'"></ion-icon>
           </div>
+          
           <div class="timeline-content">
-            <article class="history-card">
-              <div class="card-title-row">
-                <div>
-                  <h3>{{ registro.vaccine.name }}</h3>
-                  <p class="muted">{{ registro.dose.doseName }}</p>
-                </div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2)">
+              <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--app-text-primary)">
+                {{ registro.vaccineName }}
+              </h3>
+              <span class="timeline-badge" [ngClass]="registro.status">
+                {{ registro.status }}
+              </span>
+            </div>
+            
+            <p class="text-secondary" style="margin: 0 0 var(--space-2) 0; font-size: 14px">
+              Dose: {{ registro.doseName }}
+            </p>
+            
+            <div style="display: flex; gap: var(--space-4); margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px dashed var(--app-border)">
+              <div style="display: flex; flex-direction: column" *ngIf="registro.appliedDate">
+                <span class="text-secondary" style="font-size: 11px; text-transform: uppercase; font-weight: 600">Aplicada em</span>
+                <span style="font-size: 14px; color: var(--app-text-primary); font-weight: 500">{{ registro.appliedDate | date:'dd/MM/yyyy' }}</span>
               </div>
-
-              <div class="vaccine-meta">
-                <div class="meta-item">
-                  <ion-icon name="calendar-outline"></ion-icon>
-                  <span><strong>{{ registro.appliedDate | date:'dd/MM/yyyy' }}</strong></span>
-                </div>
-
-                <div class="meta-item" *ngIf="registro.location">
-                  <ion-icon name="location-outline"></ion-icon>
-                  <span>{{ registro.location }}</span>
-                </div>
+              <div style="display: flex; flex-direction: column" *ngIf="!registro.appliedDate">
+                <span class="text-secondary" style="font-size: 11px; text-transform: uppercase; font-weight: 600">Prevista para</span>
+                <span style="font-size: 14px; color: var(--app-text-primary); font-weight: 500">{{ registro.dueDate | date:'dd/MM/yyyy' }}</span>
               </div>
-              
-              <p class="muted" *ngIf="registro.notes" style="margin-top: 0.5rem; font-size: 0.9rem;">
-                <ion-icon name="document-text-outline" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
-                {{ registro.notes }}
-              </p>
-            </article>
+            </div>
           </div>
         </div>
       </div>
 
-      <section class="empty-state" *ngIf="historico.length === 0">
-        <div class="timeline-marker" style="margin: 0 auto; margin-bottom: 1rem;">
-          <ion-icon name="calendar-outline" size="large" color="medium"></ion-icon>
-        </div>
-        <h2>Nenhum registro</h2>
-        <p class="muted">Nenhuma vacina foi registrada como tomada para esta criança ainda.</p>
-      </section>
+      <app-empty-state 
+        *ngIf="historico.length === 0"
+        icon="document-text-outline" 
+        title="Nenhum registro" 
+        message="Esta criança ainda não possui registros no histórico de vacinação."
+        actionLabel="Voltar para Crianças"
+        [routerLink]="['/tabs/crianca']">
+      </app-empty-state>
     </div>
+
+    <!-- Empty State Global -->
+    <app-empty-state 
+      *ngIf="criancas.length === 0"
+      icon="people-outline" 
+      title="Nenhuma criança cadastrada" 
+      message="Cadastre uma criança primeiro para ver o histórico de vacinação."
+      actionLabel="Cadastrar Criança"
+      [routerLink]="['/tabs/crianca']">
+    </app-empty-state>
+
   </div>
 </ion-content>

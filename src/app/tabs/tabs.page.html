@@ -1,4 +1,5 @@
-<ion-header class="ion-no-border">
+<ion-header class="ion-no-border" style="display: none">
+  <!-- We hide the main tabs header because each page now has its own <app-page-header> which looks better -->
   <ion-toolbar color="primary">
     <ion-title>Vacina Kids</ion-title>
     <ion-buttons slot="end">
@@ -10,7 +11,7 @@
 </ion-header>
 
 <ion-tabs>
-  <ion-tab-bar slot="bottom">
+  <ion-tab-bar slot="bottom" style="--border-top: 1px solid var(--app-border); box-shadow: 0 -4px 16px rgba(16, 24, 40, 0.04)">
     <ion-tab-button tab="crianca" href="/tabs/crianca">
       <ion-icon name="people-outline"></ion-icon>
       <ion-label>Crianças</ion-label>
@@ -29,6 +30,11 @@
     <ion-tab-button tab="campanhas" href="/tabs/campanhas">
       <ion-icon name="megaphone-outline"></ion-icon>
       <ion-label>Campanhas</ion-label>
+    </ion-tab-button>
+    
+    <ion-tab-button (click)="logout()" style="color: var(--app-text-muted)">
+      <ion-icon name="log-out-outline"></ion-icon>
+      <ion-label>Sair</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

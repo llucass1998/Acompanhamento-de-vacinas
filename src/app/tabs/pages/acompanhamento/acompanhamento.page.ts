@@ -1,22 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import {
   IonContent,
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonBadge,
-  IonIcon,
   IonButton,
-  IonSearchbar,
-  IonSegment,
-  IonSegmentButton,
-  IonLabel,
+  IonCard,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -25,11 +18,16 @@ import {
   alertCircle,
   calendarOutline,
   medicalOutline,
+  peopleOutline,
+  waterOutline
 } from 'ionicons/icons';
 
 import { ResumoVacinal, VaccinationSchedule } from '../../../models/vacina.model';
 import { ChildService } from '../../../services/child/child.service';
 import { VaccinationRecordService } from '../../../services/vaccination-record/vaccination-record.service';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
+import { StatusChipComponent } from '../../../shared/components/status-chip/status-chip.component';
 
 @Component({
   selector: 'app-acompanhamento',
@@ -39,21 +37,14 @@ import { VaccinationRecordService } from '../../../services/vaccination-record/v
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonBadge,
-    IonIcon,
     IonButton,
-    IonSearchbar,
-    IonSegment,
-    IonSegmentButton,
-    IonLabel,
+    IonCard,
+    IonIcon,
+    PageHeaderComponent,
+    EmptyStateComponent,
+    StatusChipComponent
   ],
 })
 export class AcompanhamentoPage implements OnInit {
@@ -74,6 +65,8 @@ export class AcompanhamentoPage implements OnInit {
       alertCircle,
       calendarOutline,
       medicalOutline,
+      peopleOutline,
+      waterOutline
     });
   }
 
@@ -141,7 +134,7 @@ export class AcompanhamentoPage implements OnInit {
 
     this.recordService.registerDose(recordPayload).subscribe({
       next: () => {
-        this.carregarDados(); // Reload data after successful registration
+        this.carregarDados();
       },
       error: (err) => {
         console.error('Erro ao registrar vacina', err);
@@ -149,13 +142,12 @@ export class AcompanhamentoPage implements OnInit {
     });
   }
 
-  getDiasParaVacina(vacina: VaccinationSchedule): number {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const prevista = new Date(vacina.dueDate);
-    prevista.setHours(0, 0, 0, 0);
-
-    const diffTime = prevista.getTime() - hoje.getTime();
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  mapStatusToChip(status: string): 'taken' | 'pending' | 'late' | 'default' {
+    switch(status.toUpperCase()) {
+      case 'TOMADA': return 'taken';
+      case 'PENDENTE': return 'pending';
+      case 'ATRASADA': return 'late';
+      default: return 'default';
+    }
   }
 }

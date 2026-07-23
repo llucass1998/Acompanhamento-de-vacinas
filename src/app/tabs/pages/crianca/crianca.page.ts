@@ -3,27 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
   IonButton,
   IonIcon,
   IonItem,
-  IonLabel,
-  IonList,
-  IonFab,
-  IonFabButton,
   IonModal,
   IonInput,
-  IonDatetime,
-  IonSelect,
-  IonSelectOption,
   IonButtons,
-  IonBadge,
+  IonCard,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
   IonTextarea,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -33,13 +22,17 @@ import {
   calendarOutline,
   checkmarkCircleOutline,
   alertCircleOutline,
+  peopleOutline,
 } from 'ionicons/icons';
 
 import { Crianca, ChildCreateRequest } from '../../../models/crianca.model';
 import { ResumoVacinal } from '../../../models/vacina.model';
 import { ChildService } from '../../../services/child/child.service';
 import { VaccinationRecordService } from '../../../services/vaccination-record/vaccination-record.service';
-import { forkJoin, catchError, of } from 'rxjs';
+import { catchError, of } from 'rxjs';
+
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-crianca',
@@ -50,28 +43,19 @@ import { forkJoin, catchError, of } from 'rxjs';
     CommonModule,
     FormsModule,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
     IonButton,
     IonIcon,
     IonItem,
-    IonLabel,
-    IonList,
-    IonFab,
-    IonFabButton,
     IonModal,
     IonInput,
-    IonDatetime,
-    IonSelect,
-    IonSelectOption,
     IonButtons,
-    IonBadge,
+    IonCard,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
     IonTextarea,
+    PageHeaderComponent,
+    EmptyStateComponent
   ],
 })
 export class CriancaPage implements OnInit {
@@ -86,7 +70,7 @@ export class CriancaPage implements OnInit {
   novaCrianca: ChildCreateRequest = {
     name: '',
     birthDate: '',
-    gender: 'M',
+    responsibleName: '',
     notes: '',
   };
 
@@ -97,6 +81,7 @@ export class CriancaPage implements OnInit {
       calendarOutline,
       checkmarkCircleOutline,
       alertCircleOutline,
+      peopleOutline,
     });
   }
 
@@ -115,12 +100,10 @@ export class CriancaPage implements OnInit {
     this.childService.getChildren().subscribe(response => {
       this.criancas = response.content || [];
       
-      // Auto select if first time and no child selected
       if (this.criancas.length > 0 && !this.criancaSelecionadaId) {
         this.selecionarCrianca(this.criancas[0].id);
       }
       
-      // Carregar resumos
       this.criancas.forEach(c => {
         this.recordService.getChildSummary(c.id).pipe(
           catchError(() => of({ total: 0, tomadas: 0, pendentes: 0, atrasadas: 0 }))
@@ -143,11 +126,10 @@ export class CriancaPage implements OnInit {
   }
 
   salvarCrianca() {
-    if (!this.novaCrianca.name || !this.novaCrianca.birthDate) {
-      return; // Basic validation
+    if (!this.novaCrianca.name || !this.novaCrianca.birthDate || !this.novaCrianca.responsibleName) {
+      return; 
     }
 
-    // Format date correctly if needed (ensure YYYY-MM-DD)
     const formattedDate = this.novaCrianca.birthDate.split('T')[0];
     const payload = { ...this.novaCrianca, birthDate: formattedDate };
 
@@ -167,7 +149,7 @@ export class CriancaPage implements OnInit {
     this.novaCrianca = {
       name: '',
       birthDate: '',
-      gender: 'M',
+      responsibleName: '',
       notes: '',
     };
   }

@@ -10,6 +10,7 @@ import com.lucas.vacinakids.user.entity.User;
 import com.lucas.vacinakids.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.lucas.vacinakids.vaccination.service.VaccinationScheduleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +21,12 @@ public class ChildService {
 
     private final ChildRepository childRepository;
     private final UserRepository userRepository;
+    private final VaccinationScheduleService scheduleService;
 
-    public ChildService(ChildRepository childRepository, UserRepository userRepository) {
+    public ChildService(ChildRepository childRepository, UserRepository userRepository, VaccinationScheduleService scheduleService) {
         this.childRepository = childRepository;
         this.userRepository = userRepository;
+        this.scheduleService = scheduleService;
     }
 
     @Transactional
@@ -40,6 +43,7 @@ public class ChildService {
         );
 
         Child savedChild = childRepository.save(child);
+        scheduleService.generateScheduleForChild(savedChild);
         return mapToResponse(savedChild);
     }
 

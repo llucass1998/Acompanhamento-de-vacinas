@@ -14,6 +14,7 @@ import com.lucas.vacinakids.vaccinationrecord.repository.VaccinationRecordReposi
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -38,6 +39,9 @@ class AuthControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -53,11 +57,23 @@ class AuthControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        vaccinationRecordRepository.deleteAll();
-        vaccinationScheduleRepository.deleteAll();
-        childRepository.deleteAll();
-        refreshTokenRepository.deleteAll();
-        userRepository.deleteAll();
+
+
+        jdbcTemplate.execute("DELETE FROM pni_statistics_snapshots");
+        jdbcTemplate.execute("DELETE FROM import_items");
+        jdbcTemplate.execute("DELETE FROM import_jobs");
+        jdbcTemplate.execute("DELETE FROM vaccination_records");
+        jdbcTemplate.execute("DELETE FROM vaccination_schedules");
+        jdbcTemplate.execute("DELETE FROM children");
+        jdbcTemplate.execute("DELETE FROM refresh_tokens");
+        jdbcTemplate.execute("DELETE FROM admin_audit_logs");
+        jdbcTemplate.execute("DELETE FROM campaigns");
+        jdbcTemplate.execute("DELETE FROM calendar_rules");
+        jdbcTemplate.execute("DELETE FROM calendar_versions");
+        jdbcTemplate.execute("DELETE FROM official_sources");
+        jdbcTemplate.execute("DELETE FROM vaccine_doses");
+        jdbcTemplate.execute("DELETE FROM vaccines");
+        jdbcTemplate.execute("DELETE FROM users");
     }
 
     @Test

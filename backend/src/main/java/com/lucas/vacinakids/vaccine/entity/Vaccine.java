@@ -58,7 +58,7 @@ public class Vaccine {
 
     public Vaccine() {}
 
-    public Vaccine(UUID id, String name, String description, boolean active, List<VaccineDose> doses, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Vaccine(UUID id, String name, String description, boolean active, List<VaccineDose> doses, LocalDateTime createdAt, LocalDateTime updatedAt, String code, String displayName, String preventedDiseases, boolean official, UUID sourceId, Long versionNumber) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -66,6 +66,12 @@ public class Vaccine {
         this.doses = doses != null ? doses : new ArrayList<>();
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.code = code;
+        this.displayName = displayName;
+        this.preventedDiseases = preventedDiseases;
+        this.official = official;
+        this.sourceId = sourceId;
+        this.versionNumber = versionNumber;
     }
 
     public UUID getId() { return id; }
@@ -121,6 +127,12 @@ public class Vaccine {
         private List<VaccineDose> doses = new ArrayList<>();
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
+        private String code;
+        private String displayName;
+        private String preventedDiseases;
+        private boolean official = false;
+        private UUID sourceId;
+        private Long versionNumber = 0L;
 
         public Builder id(UUID id) { this.id = id; return this; }
         public Builder name(String name) { this.name = name; return this; }
@@ -129,9 +141,15 @@ public class Vaccine {
         public Builder doses(List<VaccineDose> doses) { this.doses = doses; return this; }
         public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
         public Builder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
+        public Builder code(String code) { this.code = code; return this; }
+        public Builder displayName(String displayName) { this.displayName = displayName; return this; }
+        public Builder preventedDiseases(String preventedDiseases) { this.preventedDiseases = preventedDiseases; return this; }
+        public Builder official(boolean official) { this.official = official; return this; }
+        public Builder sourceId(UUID sourceId) { this.sourceId = sourceId; return this; }
+        public Builder versionNumber(Long versionNumber) { this.versionNumber = versionNumber; return this; }
 
         public Vaccine build() {
-            return new Vaccine(id, name, description, active, doses, createdAt, updatedAt);
+            return new Vaccine(id, name, description, active, doses, createdAt, updatedAt, code, displayName, preventedDiseases, official, sourceId, versionNumber);
         }
     }
 

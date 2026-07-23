@@ -1,27 +1,21 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import {
   IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonBadge,
   IonIcon,
-  IonLabel,
-  IonButton,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { checkmarkCircle, locationOutline, calendarOutline, documentTextOutline, peopleOutline } from 'ionicons/icons';
+import { documentTextOutline, timeOutline, checkmarkCircleOutline } from 'ionicons/icons';
 
-import { VaccinationRecord } from '../../../models/vacina.model';
-import { ChildService } from '../../../services/child/child.service';
 import { VaccinationRecordService } from '../../../services/vaccination-record/vaccination-record.service';
-import { RouterModule } from '@angular/router';
+import { ChildService } from '../../../services/child/child.service';
+import { VaccinationSchedule } from '../../../models/vacina.model';
+import { Crianca } from '../../../models/crianca.model';
+
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-historico',
@@ -29,58 +23,80 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./historico.page.scss'],
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonBadge,
-    IonIcon,
-    IonLabel,
-    IonButton,
+    CommonModule, 
+    FormsModule, 
     RouterModule,
-  ],
+    IonContent, 
+    IonIcon, 
+    PageHeaderComponent,
+    EmptyStateComponent,
+  ]
 })
 export class HistoricoPage implements OnInit {
-  private childService = inject(ChildService);
   private recordService = inject(VaccinationRecordService);
+  private childService = inject(ChildService);
 
+  historico: VaccinationSchedule[] = [];
+  criancas: Crianca[] = [];
   criancaSelecionadaId: string | null = null;
-  historico: any[] = [];
+  filtroStatus: string = 'TODOS';
 
   constructor() {
-    addIcons({ checkmarkCircle, locationOutline, calendarOutline, documentTextOutline, peopleOutline });
+    addIcons({ documentTextOutline, timeOutline, checkmarkCircleOutline });
   }
 
   ngOnInit() {
+    this.carregarCriancas();
     this.childService.selectedChild$.subscribe(id => {
       this.criancaSelecionadaId = id;
-      this.carregarDados();
+      if (id) {
+        this.carregarHistorico();
+      }
     });
   }
 
   ionViewWillEnter() {
-    this.carregarDados();
+    if (this.criancaSelecionadaId) {
+      this.carregarHistorico();
+    } else {
+      this.carregarCriancas();
+    }
   }
 
-  carregarDados() {
-    if (!this.criancaSelecionadaId) {
-      this.historico = [];
-      return;
-    }
-
-    this.recordService.getChildRecords(this.criancaSelecionadaId).subscribe(
-      (response) => {
-        // Sort by applied date descending
-        this.historico = response.sort((a: any, b: any) => 
-          new Date(b.appliedDate).getTime() - new Date(a.appliedDate).getTime()
-        );
+  carregarCriancas() {
+    this.childService.getChildren().subscribe(response => {
+      this.criancas = response.content || [];
+      if (this.criancas.length > 0 && !this.criancaSelecionadaId) {
+        this.childService.selectChild(this.criancas[0].id);
       }
-    );
+    });
+  }
+
+  onCriancaChange() {
+    if (this.criancaSelecionadaId) {
+      this.childService.selectChild(this.criancaSelecionadaId);
+    }
+  }
+
+  onFiltroChange() {
+    this.carregarHistorico();
+  }
+
+  carregarHistorico() {
+    if (!this.criancaSelecionadaId) return;
+
+    this.recordService.getChildRecords(this.criancaSelecionadaId).subscribe(response => {
+      let dados: VaccinationSchedule[] = response.content || [];
+      
+      if (this.filtroStatus !== 'TODOS') {
+        dados = dados.filter((r: VaccinationSchedule) => r.status === this.filtroStatus);
+      }
+      
+      this.historico = dados.sort((a: VaccinationSchedule, b: VaccinationSchedule) => {
+        const dataA = new Date(a.appliedDate || a.dueDate).getTime();
+        const dataB = new Date(b.appliedDate || b.dueDate).getTime();
+        return dataB - dataA;
+      });
+    });
   }
 }

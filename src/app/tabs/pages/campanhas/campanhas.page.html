@@ -1,56 +1,50 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      <span class="toolbar-brand">
-        <img src="assets/logo-vacina.png" alt="" aria-hidden="true">
-        <span>Campanhas</span>
-      </span>
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-page-header title="Campanhas"></app-page-header>
 
 <ion-content>
   <div class="page-container">
-    <section class="hero-card">
+    <div class="section-row" style="margin-top: 0">
       <div>
-        <p class="hero-tag">Avisos e comunicados</p>
-        <h1>Campanhas ativas</h1>
-        <p>Fique por dentro das iniciativas do Ministério da Saúde e proteja sua família.</p>
+        <h2 class="section-heading">Campanhas Ativas</h2>
+        <p class="section-caption">
+          Fique por dentro das iniciativas do Ministério da Saúde e proteja sua família.
+        </p>
       </div>
-    </section>
-
-    <div class="campaign-grid">
-      <article class="campaign-card" *ngFor="let campanha of campanhas">
-        <div class="campaign-header">
-          <h3>{{ campanha.title }}</h3>
-          <span class="badge-status active-campaign">Em andamento</span>
-        </div>
-
-        <p class="campaign-description">{{ campanha.description }}</p>
-
-        <div class="campaign-meta">
-          <div class="meta-item">
-            <ion-icon name="people-outline"></ion-icon>
-            <div>
-              <span>Público-alvo</span>
-              <strong>{{ campanha.targetAudience }}</strong>
-            </div>
-          </div>
-
-          <div class="meta-item">
-            <ion-icon name="calendar-outline"></ion-icon>
-            <div>
-              <span>Período</span>
-              <strong>{{ campanha.startDate | date:'dd/MM' }} até {{ campanha.endDate | date:'dd/MM/yyyy' }}</strong>
-            </div>
-          </div>
-        </div>
-      </article>
     </div>
 
-    <section class="empty-state" *ngIf="campanhas.length === 0">
-      <h2>Nenhuma campanha</h2>
-      <p class="muted">Não há campanhas de vacinação ativas no momento.</p>
-    </section>
+    <div class="card-grid" *ngIf="campanhas.length > 0">
+      <ion-card class="custom-card" *ngFor="let campanha of campanhas" style="display: flex; flex-direction: column; border-top: 4px solid var(--app-primary)">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-3)">
+          <h3 style="margin: 0; font-size: 18px; color: var(--app-primary)">{{ campanha.title }}</h3>
+          <span class="badge-status" style="background: var(--app-primary-soft); color: var(--app-primary); font-size: 11px">Ativa</span>
+        </div>
+
+        <p class="text-secondary" style="margin: 0 0 var(--space-4) 0; flex: 1">{{ campanha.description }}</p>
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-2); padding-top: var(--space-3); border-top: 1px solid var(--app-border)">
+          <div style="display: flex; align-items: flex-start; gap: var(--space-2)">
+            <ion-icon name="people-outline" class="text-secondary" style="margin-top: 2px"></ion-icon>
+            <div style="display: flex; flex-direction: column">
+              <span class="text-secondary" style="font-size: 12px; text-transform: uppercase; font-weight: 700">Público-alvo</span>
+              <span class="font-bold" style="font-size: 14px">{{ campanha.targetAudience }}</span>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: flex-start; gap: var(--space-2); margin-top: var(--space-2)">
+            <ion-icon name="calendar-outline" class="text-secondary" style="margin-top: 2px"></ion-icon>
+            <div style="display: flex; flex-direction: column">
+              <span class="text-secondary" style="font-size: 12px; text-transform: uppercase; font-weight: 700">Período</span>
+              <span class="font-bold" style="font-size: 14px">{{ campanha.startDate | date:'dd/MM' }} até {{ campanha.endDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+      </ion-card>
+    </div>
+
+    <app-empty-state 
+      *ngIf="campanhas.length === 0" 
+      icon="calendar-outline" 
+      title="Nenhuma campanha" 
+      message="Não há campanhas de vacinação ativas no momento.">
+    </app-empty-state>
   </div>
 </ion-content>

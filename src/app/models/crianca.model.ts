@@ -2,21 +2,22 @@ export interface Crianca {
   id: string;
   name: string;
   birthDate: string;
-  gender: string;
+  responsibleName: string;
   notes?: string;
-  active: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ChildCreateRequest {
   name: string;
   birthDate: string; // "YYYY-MM-DD"
-  gender: string;
+  responsibleName: string;
   notes?: string;
 }
 
 export interface ChildUpdateRequest {
   name: string;
   birthDate: string;
-  gender: string;
+  responsibleName: string;
   notes?: string;
 }

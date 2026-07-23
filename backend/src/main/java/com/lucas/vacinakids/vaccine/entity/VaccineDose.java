@@ -62,7 +62,7 @@ public class VaccineDose {
 
     public VaccineDose() {}
 
-    public VaccineDose(UUID id, Vaccine vaccine, String doseName, int recommendedAgeMonths, String description, boolean active, String source, String sourceVersion, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public VaccineDose(UUID id, Vaccine vaccine, String doseName, int recommendedAgeMonths, String description, boolean active, String source, String sourceVersion, LocalDateTime createdAt, LocalDateTime updatedAt, String code, Integer doseOrder, UUID sourceId, Long versionNumber) {
         this.id = id;
         this.vaccine = vaccine;
         this.doseName = doseName;
@@ -73,6 +73,10 @@ public class VaccineDose {
         this.sourceVersion = sourceVersion;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.code = code;
+        this.doseOrder = doseOrder;
+        this.sourceId = sourceId;
+        this.versionNumber = versionNumber;
     }
 
     public UUID getId() { return id; }
@@ -129,6 +133,10 @@ public class VaccineDose {
         private String sourceVersion;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
+        private String code;
+        private Integer doseOrder;
+        private UUID sourceId;
+        private Long versionNumber = 0L;
 
         public Builder id(UUID id) { this.id = id; return this; }
         public Builder vaccine(Vaccine vaccine) { this.vaccine = vaccine; return this; }
@@ -140,9 +148,13 @@ public class VaccineDose {
         public Builder sourceVersion(String sourceVersion) { this.sourceVersion = sourceVersion; return this; }
         public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
         public Builder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
+        public Builder code(String code) { this.code = code; return this; }
+        public Builder doseOrder(Integer doseOrder) { this.doseOrder = doseOrder; return this; }
+        public Builder sourceId(UUID sourceId) { this.sourceId = sourceId; return this; }
+        public Builder versionNumber(Long versionNumber) { this.versionNumber = versionNumber; return this; }
 
         public VaccineDose build() {
-            return new VaccineDose(id, vaccine, doseName, recommendedAgeMonths, description, active, source, sourceVersion, createdAt, updatedAt);
+            return new VaccineDose(id, vaccine, doseName, recommendedAgeMonths, description, active, source, sourceVersion, createdAt, updatedAt, code, doseOrder, sourceId, versionNumber);
         }
     }
 

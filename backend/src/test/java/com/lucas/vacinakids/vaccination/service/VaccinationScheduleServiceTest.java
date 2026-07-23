@@ -35,6 +35,12 @@ class VaccinationScheduleServiceTest {
     @Mock
     private ChildRepository childRepository;
 
+    @Mock
+    private com.lucas.vacinakids.calendar.repository.CalendarVersionRepository calendarVersionRepository;
+
+    @Mock
+    private com.lucas.vacinakids.calendar.repository.CalendarRuleRepository calendarRuleRepository;
+
     @InjectMocks
     private VaccinationScheduleService scheduleService;
 

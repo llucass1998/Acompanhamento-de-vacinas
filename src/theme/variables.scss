@@ -1,25 +1,106 @@
-﻿:root {
-  --ion-color-primary: #ABC270;
-  --ion-color-primary-rgb: 171, 194, 112;
-  --ion-color-primary-contrast: #473C33;
-  --ion-color-primary-shade: #96ab63;
-  --ion-color-primary-tint: #b3c97e;
+// Ionic Variables and Custom Design System Tokens
 
-  --ion-color-secondary: #FEC868;
-  --ion-color-secondary-rgb: 254, 200, 104;
-  --ion-color-secondary-contrast: #473C33;
-  --ion-color-secondary-shade: #e0b05c;
-  --ion-color-secondary-tint: #fece77;
+:root {
+  /** Ionic Colors mapped to new Design System **/
+  --ion-color-primary: #256d5a;
+  --ion-color-primary-rgb: 37, 109, 90;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #1f5b4c;
+  --ion-color-primary-tint: #e8f3ef;
 
-  --ion-color-tertiary: #FDA769;
-  --ion-color-tertiary-rgb: 253, 167, 105;
-  --ion-color-tertiary-contrast: #473C33;
-  --ion-color-tertiary-shade: #df935c;
-  --ion-color-tertiary-tint: #fdb078;
+  --ion-color-secondary: #2f6bff;
+  --ion-color-secondary-rgb: 47, 107, 255;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-shade: #2458d8;
+  --ion-color-secondary-tint: #edf3ff;
 
-  --app-green: #ABC270;
-  --app-yellow: #FEC868;
-  --app-orange: #FDA769;
-  --app-brown: #473C33;
-  --app-bg: #fff8ed;
+  --ion-color-tertiary: #f4b860;
+  --ion-color-tertiary-rgb: 244, 184, 96;
+  --ion-color-tertiary-contrast: #172033;
+  --ion-color-tertiary-shade: #d6a154;
+  --ion-color-tertiary-tint: #fff5e4;
+
+  --ion-color-success: #15803d;
+  --ion-color-success-rgb: 21, 128, 61;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-shade: #127136;
+  --ion-color-success-tint: #e9f7ee;
+
+  --ion-color-warning: #b7791f;
+  --ion-color-warning-rgb: 183, 121, 31;
+  --ion-color-warning-contrast: #ffffff;
+  --ion-color-warning-shade: #a16a1b;
+  --ion-color-warning-tint: #fff7e6;
+
+  --ion-color-danger: #c2413a;
+  --ion-color-danger-rgb: 194, 65, 58;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-shade: #ab3933;
+  --ion-color-danger-tint: #fdecec;
+
+  /** Design System Custom Tokens **/
+  --app-primary: #256d5a;
+  --app-primary-hover: #1f5b4c;
+  --app-primary-active: #194a3e;
+  --app-primary-soft: #e8f3ef;
+
+  --app-secondary: #2f6bff;
+  --app-secondary-hover: #2458d8;
+  --app-secondary-soft: #edf3ff;
+
+  --app-accent: #f4b860;
+  --app-accent-soft: #fff5e4;
+
+  --app-background: #f7f9fc;
+  --app-surface: #ffffff;
+  --app-surface-secondary: #f0f4f8;
+
+  --app-text-primary: #172033;
+  --app-text-secondary: #667085;
+  --app-text-muted: #98a2b3;
+  --app-text-inverse: #ffffff;
+
+  --app-border: #e4e7ec;
+  --app-border-strong: #d0d5dd;
+
+  --app-success: #15803d;
+  --app-success-soft: #e9f7ee;
+
+  --app-warning: #b7791f;
+  --app-warning-soft: #fff7e6;
+
+  --app-danger: #c2413a;
+  --app-danger-soft: #fdecec;
+
+  --app-info: #2563eb;
+  --app-info-soft: #eaf1ff;
+
+  /** Spacing **/
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /** Border Radius **/
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /** Shadows **/
+  --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 6px 18px rgba(16, 24, 40, 0.08);
+  --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.12);
+
+  /** Base Ionic Overrides **/
+  --ion-background-color: var(--app-background);
+  --ion-text-color: var(--app-text-primary);
+  --ion-font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }

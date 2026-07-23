@@ -3,14 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonBadge,
   IonIcon,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -18,6 +11,9 @@ import { calendarOutline, peopleOutline } from 'ionicons/icons';
 
 import { Campanha } from '../../../models/vacina.model';
 import { CampaignService } from '../../../services/campaign/campaign.service';
+
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-campanhas',
@@ -28,15 +24,10 @@ import { CampaignService } from '../../../services/campaign/campaign.service';
     CommonModule,
     FormsModule,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
     IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonBadge,
     IonIcon,
+    PageHeaderComponent,
+    EmptyStateComponent
   ],
 })
 export class CampanhasPage implements OnInit {

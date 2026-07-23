@@ -1,70 +1,80 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar>
+  <ion-toolbar style="--padding-top: var(--space-4); --padding-start: var(--space-2); --background: transparent">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login" text="Voltar"></ion-back-button>
+      <ion-back-button defaultHref="/login" text="Voltar" color="primary"></ion-back-button>
     </ion-buttons>
-    <ion-title>Criar Conta</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="register-container">
-    <div class="header-text">
-      <h2>Junte-se a nós</h2>
-      <p>Cadastre-se para gerenciar o calendário de vacinas das suas crianças.</p>
+  <div class="page-container" style="max-width: 480px; margin: 0 auto; padding-top: var(--space-2)">
+    <div style="text-align: center; margin-bottom: var(--space-8)">
+      <h1 style="font-size: 28px; margin: 0 0 var(--space-2)">Junte-se a nós</h1>
+      <p class="text-secondary" style="font-size: 16px; margin: 0">Cadastre-se para gerenciar o calendário de vacinas das suas crianças.</p>
     </div>
 
-    <ion-card>
-      <ion-card-content>
-        <ion-item lines="full">
-          <ion-icon name="person-outline" slot="start" color="primary"></ion-icon>
+    <ion-card class="custom-card" style="padding: var(--space-6)">
+      <form (ngSubmit)="register()" #form="ngForm">
+        <ion-item class="custom-input">
+          <ion-icon name="person-outline" slot="start" class="text-secondary" style="margin-right: var(--space-3)"></ion-icon>
           <ion-input 
             type="text" 
+            label="Nome completo"
+            labelPlacement="floating"
             [(ngModel)]="userData.name" 
-            placeholder="Nome completo"
+            name="name"
             required>
           </ion-input>
         </ion-item>
 
-        <ion-item lines="full">
-          <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
+        <ion-item class="custom-input">
+          <ion-icon name="mail-outline" slot="start" class="text-secondary" style="margin-right: var(--space-3)"></ion-icon>
           <ion-input 
             type="email" 
+            label="E-mail"
+            labelPlacement="floating"
             [(ngModel)]="userData.email" 
-            placeholder="E-mail"
+            name="email"
             required>
           </ion-input>
         </ion-item>
 
-        <ion-item lines="full">
-          <ion-icon name="lock-closed-outline" slot="start" color="primary"></ion-icon>
+        <ion-item class="custom-input">
+          <ion-icon name="lock-closed-outline" slot="start" class="text-secondary" style="margin-right: var(--space-3)"></ion-icon>
           <ion-input 
             type="password" 
+            label="Senha (Min. 8 chars, 1 Maiúscula, 1 Número, 1 Especial ex: @)"
+            labelPlacement="floating"
             [(ngModel)]="userData.password" 
-            placeholder="Senha (Maiúscula, Minúscula, Número e Especial ex: @)"
+            name="password"
             required>
           </ion-input>
         </ion-item>
 
-        <ion-item lines="full">
-          <ion-icon name="lock-closed" slot="start" color="primary"></ion-icon>
+        <ion-item class="custom-input" style="margin-bottom: var(--space-2)">
+          <ion-icon name="shield-checkmark-outline" slot="start" class="text-secondary" style="margin-right: var(--space-3)"></ion-icon>
           <ion-input 
             type="password" 
+            label="Confirme a senha"
+            labelPlacement="floating"
             [(ngModel)]="userData.confirmPassword" 
-            placeholder="Confirme a senha"
+            name="confirmPassword"
             required>
           </ion-input>
         </ion-item>
 
-        <div class="error-message" *ngIf="errorMessage">
-          <ion-text color="danger">{{ errorMessage }}</ion-text>
+        <div *ngIf="errorMessage" style="margin: var(--space-4) 0; padding: var(--space-3); background: var(--app-danger-soft); border-radius: var(--radius-sm); border: 1px solid rgba(194, 65, 58, 0.2)">
+          <p style="color: var(--app-danger); margin: 0; font-size: 14px; display: flex; align-items: center; gap: var(--space-2)">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            {{ errorMessage }}
+          </p>
         </div>
 
-        <ion-button expand="block" class="ion-margin-top" (click)="register()" [disabled]="isLoading">
+        <ion-button type="submit" expand="block" class="main-button" style="margin-top: var(--space-6)" [disabled]="isLoading || !form.valid">
           <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
-          <span *ngIf="!isLoading">Cadastrar</span>
+          <span *ngIf="!isLoading">Criar Conta Gratuita</span>
         </ion-button>
-      </ion-card-content>
+      </form>
     </ion-card>
   </div>
 </ion-content>
